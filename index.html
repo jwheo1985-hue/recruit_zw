@@ -1,0 +1,1902 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>채용 관리 에이전트</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&family=DM+Mono:wght@400;500&display=swap');
+
+:root {
+  --bg: #f5f3ef;
+  --surface: #ffffff;
+  --surface2: #f0ede8;
+  --border: #e2ddd6;
+  --ink: #1a1714;
+  --ink-muted: #8a8076;
+  --accent: #c94f2a;
+  --accent2: #2a6cc9;
+  --accent3: #2ac978;
+  --accent4: #c9a72a;
+  --shadow: rgba(26,23,20,0.08);
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: 'Noto Sans KR', sans-serif;
+  background: var(--bg);
+  color: var(--ink);
+  min-height: 100vh;
+}
+
+header {
+  background: var(--ink);
+  color: white;
+  padding: 0 28px;
+  height: 58px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: 900;
+  font-size: 15px;
+  letter-spacing: -0.5px;
+}
+
+.logo-dot {
+  width: 10px; height: 10px;
+  background: var(--accent);
+  border-radius: 50%;
+}
+
+.header-stats {
+  display: flex;
+  gap: 20px;
+  font-family: 'DM Mono', monospace;
+  font-size: 12px;
+  color: rgba(255,255,255,0.5);
+}
+
+.header-stat span { color: white; font-weight: 500; }
+
+.app {
+  display: grid;
+  grid-template-columns: 200px 1fr;
+  min-height: calc(100vh - 58px);
+}
+
+/* Sidebar */
+.sidebar {
+  background: var(--ink);
+  padding: 20px 0;
+}
+
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 11px 20px;
+  cursor: pointer;
+  font-size: 13px;
+  color: rgba(255,255,255,0.45);
+  border-left: 3px solid transparent;
+  transition: all 0.15s;
+}
+
+.nav-item:hover { color: rgba(255,255,255,0.8); background: rgba(255,255,255,0.05); }
+.nav-item.active { color: white; border-left-color: var(--accent); background: rgba(255,255,255,0.07); }
+.nav-icon { font-size: 15px; }
+
+.nav-section-label {
+  padding: 14px 20px 5px;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  color: rgba(255,255,255,0.2);
+  text-transform: uppercase;
+}
+
+.nav-badge {
+  margin-left: auto;
+  background: var(--accent);
+  color: white;
+  font-size: 10px;
+  font-weight: 700;
+  padding: 2px 7px;
+  border-radius: 10px;
+  font-family: 'DM Mono', monospace;
+}
+
+/* Main */
+.main { overflow-y: auto; padding: 28px; display: none; }
+.main.active { display: block; }
+
+.page-title {
+  font-size: 24px;
+  font-weight: 900;
+  letter-spacing: -1px;
+  margin-bottom: 4px;
+}
+
+.page-sub {
+  color: var(--ink-muted);
+  font-size: 13px;
+  margin-bottom: 24px;
+}
+
+/* Cards */
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 20px;
+  margin-bottom: 16px;
+  box-shadow: 0 2px 8px var(--shadow);
+}
+
+.card-title {
+  font-size: 13px;
+  font-weight: 700;
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; }
+.grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; }
+
+/* Stat cards */
+.stat-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 16px 18px;
+  box-shadow: 0 2px 8px var(--shadow);
+}
+
+.stat-label { font-size: 11px; color: var(--ink-muted); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 6px; }
+.stat-value { font-family: 'DM Mono', monospace; font-size: 28px; font-weight: 500; color: var(--ink); }
+.stat-note { font-size: 11px; color: var(--ink-muted); margin-top: 4px; }
+
+/* Status badges */
+.status-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px 10px;
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.status-pending { background: #fef3e2; color: #c9a72a; }
+.status-review { background: #e8f0fe; color: #2a6cc9; }
+.status-pass { background: #e6f9f0; color: #2ac978; }
+.status-fail { background: #fce8e8; color: #c94f2a; }
+.status-hold { background: #f0ede8; color: #8a8076; }
+
+/* Upload zone */
+.upload-zone {
+  border: 2px dashed var(--border);
+  border-radius: 12px;
+  padding: 48px 24px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.2s;
+  background: var(--surface2);
+}
+
+.upload-zone:hover, .upload-zone.drag-over {
+  border-color: var(--accent);
+  background: rgba(201,79,42,0.04);
+}
+
+.upload-icon { font-size: 48px; margin-bottom: 12px; }
+.upload-title { font-weight: 700; font-size: 15px; margin-bottom: 6px; }
+.upload-sub { font-size: 12px; color: var(--ink-muted); }
+
+/* Form */
+.form-group { margin-bottom: 13px; }
+
+label {
+  display: block;
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--ink-muted);
+  margin-bottom: 5px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+input, select, textarea {
+  width: 100%;
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 9px 12px;
+  color: var(--ink);
+  font-family: 'Noto Sans KR', sans-serif;
+  font-size: 13px;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+input:focus, select:focus, textarea:focus { border-color: var(--accent); background: white; }
+select option { background: white; }
+
+/* Buttons */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 9px 16px;
+  border-radius: 8px;
+  border: none;
+  font-family: 'Noto Sans KR', sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn-primary { background: var(--ink); color: white; }
+.btn-primary:hover { background: #333; transform: translateY(-1px); }
+.btn-accent { background: var(--accent); color: white; }
+.btn-accent:hover { background: #b03d1e; transform: translateY(-1px); }
+.btn-secondary { background: var(--surface2); color: var(--ink); border: 1px solid var(--border); }
+.btn-secondary:hover { border-color: var(--ink); }
+.btn-success { background: var(--accent3); color: white; }
+.btn-danger { background: var(--accent); color: white; }
+.btn:disabled { opacity: 0.4; cursor: not-allowed; transform: none; }
+
+/* Table */
+.recruit-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+
+.recruit-table th {
+  background: var(--surface2);
+  padding: 10px 14px;
+  text-align: left;
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--ink-muted);
+  border-bottom: 1px solid var(--border);
+  white-space: nowrap;
+}
+
+.recruit-table td {
+  padding: 12px 14px;
+  border-bottom: 1px solid var(--border);
+  vertical-align: middle;
+}
+
+.recruit-table tr:hover td { background: var(--surface2); }
+.recruit-table tr:last-child td { border-bottom: none; }
+
+/* Candidate card */
+.candidate-name { font-weight: 700; font-size: 14px; }
+.candidate-meta { font-size: 11px; color: var(--ink-muted); margin-top: 2px; }
+
+/* AI chat */
+.chat-messages {
+  min-height: 200px;
+  max-height: 400px;
+  overflow-y: auto;
+  padding: 12px 0;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.msg { max-width: 85%; padding: 10px 14px; border-radius: 10px; font-size: 13px; line-height: 1.6; }
+.msg-user { background: var(--ink); color: white; align-self: flex-end; border-bottom-right-radius: 3px; }
+.msg-ai { background: var(--surface2); border: 1px solid var(--border); align-self: flex-start; border-bottom-left-radius: 3px; }
+
+.chat-input-area { display: flex; gap: 8px; padding-top: 12px; border-top: 1px solid var(--border); margin-top: 12px; }
+.chat-input { flex: 1; resize: none; padding: 10px 12px; font-size: 13px; }
+
+/* Loading */
+.loading { display: inline-flex; gap: 4px; align-items: center; }
+.loading span { width: 6px; height: 6px; background: var(--accent); border-radius: 50%; animation: bounce 1.2s infinite; }
+.loading span:nth-child(2) { animation-delay: 0.2s; }
+.loading span:nth-child(3) { animation-delay: 0.4s; }
+@keyframes bounce { 0%,60%,100%{transform:translateY(0)} 30%{transform:translateY(-6px)} }
+
+/* Modal */
+.modal-overlay {
+  display: none;
+  position: fixed; inset: 0;
+  background: rgba(0,0,0,0.5);
+  z-index: 200;
+  align-items: center;
+  justify-content: center;
+}
+
+.modal-overlay.open { display: flex; }
+
+.modal {
+  background: white;
+  border-radius: 16px;
+  padding: 28px;
+  width: 560px;
+  max-width: 95vw;
+  max-height: 85vh;
+  overflow-y: auto;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+}
+
+.modal-title { font-size: 18px; font-weight: 900; margin-bottom: 20px; letter-spacing: -0.5px; }
+.modal-close { float: right; cursor: pointer; font-size: 20px; color: var(--ink-muted); background: none; border: none; }
+
+/* Progress bar */
+.progress-bar {
+  height: 6px;
+  background: var(--border);
+  border-radius: 3px;
+  overflow: hidden;
+  margin-top: 8px;
+}
+
+.progress-fill {
+  height: 100%;
+  background: var(--accent);
+  border-radius: 3px;
+  transition: width 0.5s;
+}
+
+/* Tabs */
+.tabs {
+  display: flex;
+  gap: 4px;
+  margin-bottom: 20px;
+  background: var(--surface2);
+  padding: 4px;
+  border-radius: 10px;
+  width: fit-content;
+  border: 1px solid var(--border);
+}
+
+.tab {
+  padding: 7px 16px;
+  border-radius: 7px;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--ink-muted);
+  transition: all 0.2s;
+}
+
+.tab.active { background: var(--ink); color: white; font-weight: 700; }
+
+/* Filter bar */
+.filter-bar {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.filter-bar input, .filter-bar select {
+  width: auto;
+  padding: 7px 12px;
+  font-size: 12px;
+}
+
+::-webkit-scrollbar { width: 5px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">
+    <div class="logo-dot"></div>
+    채용 관리 에이전트
+  </div>
+  <div class="header-stats">
+    총 지원자 <span id="hTotal">0</span>명 &nbsp;|&nbsp;
+    검토중 <span id="hReview">0</span>명 &nbsp;|&nbsp;
+    합격 <span id="hPass">0</span>명
+  </div>
+</header>
+
+<div class="app">
+  <!-- Sidebar -->
+  <nav class="sidebar">
+    <div class="nav-section-label">메인</div>
+    <div class="nav-item active" data-page="dashboard">
+      <span class="nav-icon">📊</span> 대시보드
+    </div>
+    <div class="nav-section-label">채용</div>
+    <div class="nav-item" data-page="upload">
+      <span class="nav-icon">📄</span> 이력서 업로드
+    </div>
+    <div class="nav-item" data-page="candidates">
+      <span class="nav-icon">👥</span> 지원자 관리
+      <span class="nav-badge" id="navBadge">0</span>
+    </div>
+    <div class="nav-section-label">분석</div>
+    <div class="nav-item" data-page="analysis">
+      <span class="nav-icon">📈</span> 지원 현황 분석
+    </div>
+    <div class="nav-item" data-page="email">
+      <span class="nav-icon">✉️</span> 이메일 발송
+    </div>
+    <div class="nav-item" data-page="chat">
+      <span class="nav-icon">🤖</span> AI 상담
+    </div>
+  </nav>
+
+  <!-- Dashboard -->
+  <div class="main active" id="page-dashboard">
+    <div class="page-title">채용 현황</div>
+    <div class="page-sub" id="dashDate"></div>
+
+    <div class="grid-4" style="margin-bottom:20px;">
+      <div class="stat-card">
+        <div class="stat-label">총 지원자</div>
+        <div class="stat-value" id="statTotal">0</div>
+        <div class="stat-note">전체 접수</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">검토 중</div>
+        <div class="stat-value" style="color:var(--accent2)" id="statReview">0</div>
+        <div class="stat-note">서류 검토</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">합격자</div>
+        <div class="stat-value" style="color:var(--accent3)" id="statPass">0</div>
+        <div class="stat-note">최종 합격</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">불합격</div>
+        <div class="stat-value" style="color:var(--accent)" id="statFail">0</div>
+        <div class="stat-note">서류/면접</div>
+      </div>
+    </div>
+
+    <div class="grid-2">
+      <div class="card">
+        <div class="card-title">🕐 최근 등록 지원자</div>
+        <div id="recentCandidates">
+          <div style="text-align:center; padding:30px 0; color:var(--ink-muted); font-size:13px;">
+            이력서를 업로드하면 여기에 표시됩니다
+          </div>
+        </div>
+        <div style="margin-top:12px;">
+          <button class="btn btn-secondary" onclick="navigate('upload')">+ 이력서 업로드</button>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">📌 지원 분야별 현황</div>
+        <div id="positionStats">
+          <div style="text-align:center; padding:30px 0; color:var(--ink-muted); font-size:13px;">
+            데이터가 없습니다
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">⚡ 빠른 실행</div>
+      <div style="display:flex; gap:10px; flex-wrap:wrap;">
+        <button class="btn btn-accent" onclick="navigate('upload')">📄 이력서 업로드</button>
+        <button class="btn btn-primary" onclick="navigate('candidates')">👥 지원자 목록 보기</button>
+        <button class="btn btn-secondary" onclick="exportToExcel()">📊 엑셀 다운로드</button>
+        <button class="btn btn-secondary" onclick="navigate('chat')">🤖 AI 상담</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Upload -->
+  <div class="main" id="page-upload">
+    <div class="page-title">이력서 업로드</div>
+    <div class="page-sub">사람인·잡코리아 등에서 다운받은 PDF 이력서를 업로드하면 AI가 자동으로 정보를 추출합니다</div>
+
+    <!-- Gemini API 키 설정 -->
+    <div class="card" style="border:2px solid var(--accent4); background:#fffbf0;">
+      <div class="card-title">🔑 Gemini API 키 설정 <span style="font-size:11px; font-weight:400; color:var(--ink-muted);">— 최초 1회만 입력 (무료)</span></div>
+      <div style="display:flex; gap:10px; align-items:flex-end;">
+        <div class="form-group" style="flex:1; margin-bottom:0;">
+          <label>Gemini API Key</label>
+          <input type="password" id="geminiApiKey" placeholder="AIza...">
+        </div>
+        <button class="btn btn-primary" onclick="saveGeminiKey()">💾 저장</button>
+      </div>
+      <div style="margin-top:8px; font-size:12px; color:var(--ink-muted);">
+        무료 발급: <a href="https://aistudio.google.com/app/apikey" target="_blank" style="color:var(--accent2);">aistudio.google.com</a> 접속 → 로그인 → <strong>Get API Key</strong> → <strong>Create API Key</strong> → 복사
+      </div>
+      <div id="geminiKeyStatus" style="margin-top:6px; font-size:12px;"></div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">📄 PDF 이력서 업로드</div>
+      <!-- 직접 보이는 버튼 방식으로 변경 -->
+      <div style="margin-bottom:14px;">
+        <label for="pdfInput" style="display:inline-flex; align-items:center; gap:8px; padding:12px 20px; background:var(--accent); color:white; border-radius:8px; cursor:pointer; font-weight:700; font-size:14px; text-transform:none; letter-spacing:0;">
+          📂 컴퓨터에서 PDF 파일 선택
+        </label>
+        <input type="file" id="pdfInput" accept=".pdf" multiple style="display:none;" onchange="handlePDFUpload(event)">
+        <span style="margin-left:12px; font-size:12px; color:var(--ink-muted);">여러 파일 동시 선택 가능</span>
+      </div>
+      <div class="upload-zone" id="uploadZone">
+        <div class="upload-icon">📋</div>
+        <div class="upload-title">또는 여기에 PDF를 끌어다 놓으세요</div>
+        <div class="upload-sub">사람인 · 잡코리아 · 원티드 등 PDF 이력서 지원</div>
+      </div>
+    </div>
+
+    <!-- 업로드 진행 상황 -->
+    <div class="card" id="uploadProgress" style="display:none;">
+      <div class="card-title">⚙️ AI 정보 추출 중...</div>
+      <div id="progressList"></div>
+    </div>
+
+    <!-- 추출 결과 확인/수정 -->
+    <div class="card" id="extractedResult" style="display:none;">
+      <div class="card-title">✅ 추출 완료 — 정보 확인 및 수정</div>
+      <div id="extractedForms"></div>
+      <div style="margin-top:16px; display:flex; gap:10px;">
+        <button class="btn btn-accent" onclick="saveAllCandidates()">💾 전체 저장</button>
+        <button class="btn btn-secondary" onclick="resetUpload()">🔄 다시 업로드</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Candidates List -->
+  <div class="main" id="page-candidates">
+    <div class="page-title">지원자 관리</div>
+    <div class="page-sub">등록된 지원자 목록 · 합격 여부 관리 · 메모 추가</div>
+
+    <div class="filter-bar">
+      <input type="text" id="searchInput" placeholder="🔍 이름, 지원분야 검색..." style="width:200px;" oninput="renderCandidateTable()">
+      <select id="filterStatus" onchange="renderCandidateTable()" style="width:120px;">
+        <option value="">전체 상태</option>
+        <option value="pending">검토 대기</option>
+        <option value="review">검토 중</option>
+        <option value="pass">합격</option>
+        <option value="fail">불합격</option>
+        <option value="hold">보류</option>
+      </select>
+      <select id="filterPosition" onchange="renderCandidateTable()" style="width:140px;">
+        <option value="">전체 지원분야</option>
+      </select>
+      <button class="btn btn-secondary" onclick="exportToExcel()">📊 엑셀 다운로드</button>
+      <button class="btn btn-accent" onclick="navigate('upload')" style="margin-left:auto;">+ 이력서 업로드</button>
+    </div>
+
+    <div class="card" style="padding:0; overflow:hidden;">
+      <div style="overflow-x:auto;">
+        <table class="recruit-table" id="candidateTable">
+          <thead>
+            <tr>
+              <th>이름</th>
+              <th>지원분야</th>
+              <th>나이</th>
+              <th>학력</th>
+              <th>경력</th>
+              <th>연락처</th>
+              <th>상태</th>
+              <th>등록일</th>
+              <th>관리</th>
+            </tr>
+          </thead>
+          <tbody id="candidateTableBody">
+            <tr><td colspan="9" style="text-align:center; padding:40px; color:var(--ink-muted);">등록된 지원자가 없습니다</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- Analysis -->
+  <div class="main" id="page-analysis">
+    <div class="page-title">지원 현황 분석</div>
+    <div class="page-sub">지원자 데이터 통계 및 AI 분석</div>
+
+    <div class="grid-2">
+      <div class="card">
+        <div class="card-title">📊 상태별 분포</div>
+        <div id="statusChart"></div>
+      </div>
+      <div class="card">
+        <div class="card-title">🎯 지원분야별 인원</div>
+        <div id="positionChart"></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">🤖 AI 채용 분석 리포트</div>
+      <div style="margin-bottom:12px;">
+        <button class="btn btn-accent" onclick="generateAnalysisReport()">분석 리포트 생성</button>
+      </div>
+      <div id="analysisReport" style="display:none; background:var(--surface2); border:1px solid var(--border); border-radius:8px; padding:16px; font-size:13px; line-height:1.8; white-space:pre-wrap;"></div>
+    </div>
+  </div>
+
+  <!-- Email Page -->
+  <div class="main" id="page-email">
+    <div class="page-title">이메일 발송</div>
+    <div class="page-sub">지원자에게 합격·불합격·면접 안내 이메일을 자동으로 발송합니다</div>
+
+    <!-- EmailJS 설정 -->
+    <div class="card" style="border:2px solid var(--accent4); background:#fffbf0;">
+      <div class="card-title">⚙️ EmailJS 설정 <span style="font-size:11px; font-weight:400; color:var(--ink-muted);">— 최초 1회만 입력하세요</span></div>
+      <div class="grid-3" style="gap:10px; margin-bottom:10px;">
+        <div class="form-group" style="margin-bottom:0;">
+          <label>Service ID</label>
+          <input type="text" id="ejsServiceId" placeholder="service_xxxxxxx">
+        </div>
+        <div class="form-group" style="margin-bottom:0;">
+          <label>Template ID</label>
+          <input type="text" id="ejsTemplateId" placeholder="template_xxxxxxx">
+        </div>
+        <div class="form-group" style="margin-bottom:0;">
+          <label>Public Key</label>
+          <input type="text" id="ejsPublicKey" placeholder="xxxxxxxxxxxxxx">
+        </div>
+      </div>
+      <div style="display:flex; gap:8px; align-items:center;">
+        <button class="btn btn-primary" onclick="saveEmailJSConfig()">💾 저장</button>
+        <span style="font-size:12px; color:var(--ink-muted);">
+          <a href="https://emailjs.com" target="_blank" style="color:var(--accent2);">emailjs.com</a> 가입 → Email Services → Email Templates → Account → Public Key
+        </span>
+      </div>
+      <div id="ejsConfigStatus" style="margin-top:8px; font-size:12px;"></div>
+    </div>
+
+    <div class="tabs">
+      <div class="tab active" onclick="switchEmailTab(this, 'email-template')">📝 템플릿 발송</div>
+      <div class="tab" onclick="switchEmailTab(this, 'email-bulk')">📨 일괄 발송</div>
+      <div class="tab" onclick="switchEmailTab(this, 'email-log')">📋 발송 기록</div>
+    </div>
+
+    <!-- 템플릿 발송 -->
+    <div id="email-template">
+      <div class="grid-2">
+        <div class="card">
+          <div class="card-title">✉️ 이메일 작성</div>
+
+          <div class="form-group">
+            <label>이메일 유형</label>
+            <select id="emailType" onchange="loadEmailTemplate()">
+              <option value="pass">✅ 합격 안내</option>
+              <option value="fail">❌ 불합격 안내</option>
+              <option value="interview">📅 면접 안내</option>
+              <option value="document">📋 서류 접수 확인</option>
+              <option value="custom">✏️ 직접 작성</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label>수신자 선택</label>
+            <select id="emailRecipient">
+              <option value="">— 지원자 선택 —</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label>수신 이메일 주소</label>
+            <input type="email" id="emailTo" placeholder="자동 입력됩니다">
+          </div>
+
+          <div class="form-group">
+            <label>제목</label>
+            <input type="text" id="emailSubject">
+          </div>
+
+          <div class="form-group">
+            <label>본문</label>
+            <textarea id="emailBody" rows="8"></textarea>
+          </div>
+
+          <div style="display:flex; gap:8px;">
+            <button class="btn btn-accent" onclick="sendEmail()">✉️ 이메일 발송</button>
+            <button class="btn btn-secondary" onclick="aiWriteEmail()">🤖 AI 작성</button>
+            <button class="btn btn-secondary" onclick="loadEmailTemplate()">🔄 템플릿 불러오기</button>
+          </div>
+          <div id="emailSendStatus" style="margin-top:10px; font-size:13px;"></div>
+        </div>
+
+        <div class="card">
+          <div class="card-title">👁️ 미리보기</div>
+          <div id="emailPreview" style="background:white; border:1px solid var(--border); border-radius:8px; padding:20px; min-height:300px;">
+            <div style="color:var(--ink-muted); text-align:center; padding:60px 0; font-size:13px;">
+              이메일을 작성하면 미리보기가 나타납니다
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 일괄 발송 -->
+    <div id="email-bulk" style="display:none;">
+      <div class="card">
+        <div class="card-title">📨 상태별 일괄 이메일 발송</div>
+        <div style="background:rgba(201,79,42,0.08); border:1px solid rgba(201,79,42,0.2); border-radius:8px; padding:12px; margin-bottom:16px; font-size:13px; color:var(--accent);">
+          ⚠️ 일괄 발송 전 EmailJS 설정이 완료되어 있어야 합니다. 월 200건 무료 한도를 확인하세요.
+        </div>
+        <div class="form-group">
+          <label>발송 대상</label>
+          <select id="bulkTarget">
+            <option value="pass">✅ 합격자 전체</option>
+            <option value="fail">❌ 불합격자 전체</option>
+            <option value="review">🔍 검토중 전체</option>
+            <option value="all">👥 전체 지원자</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>이메일 유형</label>
+          <select id="bulkEmailType" onchange="loadBulkTemplate()">
+            <option value="pass">합격 안내</option>
+            <option value="fail">불합격 안내</option>
+            <option value="interview">면접 안내</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>제목</label>
+          <input type="text" id="bulkSubject">
+        </div>
+        <div class="form-group">
+          <label>본문 <span style="font-weight:400; color:var(--ink-muted);">({이름} 은 자동으로 지원자 이름으로 대체됩니다)</span></label>
+          <textarea id="bulkBody" rows="6"></textarea>
+        </div>
+        <div id="bulkPreviewList" style="margin-bottom:12px;"></div>
+        <div style="display:flex; gap:8px;">
+          <button class="btn btn-secondary" onclick="previewBulkRecipients()">👥 발송 대상 확인</button>
+          <button class="btn btn-accent" onclick="sendBulkEmail()">📨 일괄 발송 시작</button>
+        </div>
+        <div id="bulkSendStatus" style="margin-top:12px; font-size:13px;"></div>
+      </div>
+    </div>
+
+    <!-- 발송 기록 -->
+    <div id="email-log" style="display:none;">
+      <div class="card">
+        <div class="card-title">📋 이메일 발송 기록</div>
+        <div style="display:flex; justify-content:flex-end; margin-bottom:12px;">
+          <button class="btn btn-secondary" onclick="clearEmailLog()">🗑️ 기록 삭제</button>
+        </div>
+        <div id="emailLogContent"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- AI Chat -->
+  <div class="main" id="page-chat">
+    <div class="page-title">AI 채용 상담</div>
+    <div class="page-sub">지원자 관련 질문, 면접 질문 추천, 평가 기준 등을 AI에게 물어보세요</div>
+
+    <div class="card" style="height:calc(100vh - 200px); display:flex; flex-direction:column;">
+      <div class="chat-messages" id="chatMessages">
+        <div class="msg msg-ai">
+          안녕하세요! 채용 관리 AI 에이전트입니다. 🤖<br><br>
+          다음과 같은 도움을 드릴 수 있어요:<br>
+          • 지원자 평가 기준 제안<br>
+          • 직무별 면접 질문 추천<br>
+          • 이력서 분석 및 검토 포인트<br>
+          • 채용 공고 작성 도움<br>
+          • 합격/불합격 판단 기준 상담<br><br>
+          무엇이든 질문해 주세요!
+        </div>
+      </div>
+      <div class="chat-input-area">
+        <textarea class="chat-input" id="chatInput" placeholder="질문을 입력하세요... (예: 개발자 면접 질문 추천해줘)" rows="2"></textarea>
+        <button class="btn btn-accent" onclick="sendChat()">전송</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 지원자 상세/수정 모달 -->
+<div class="modal-overlay" id="candidateModal">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal()">✕</button>
+    <div class="modal-title" id="modalTitle">지원자 정보</div>
+    <div id="modalContent"></div>
+  </div>
+</div>
+
+<script>
+// ── 데이터 저장소 ──────────────────────────────────────
+let candidates = JSON.parse(localStorage.getItem('recruitCandidates') || '[]');
+let extractedQueue = [];
+
+// ── 날짜 ─────────────────────────────────────────────
+const now = new Date();
+document.getElementById('dashDate').textContent =
+  now.toLocaleDateString('ko-KR', {year:'numeric', month:'long', day:'numeric', weekday:'long'});
+
+// ── Navigation ────────────────────────────────────────
+function navigate(page) {
+  document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+  document.querySelectorAll('.main').forEach(el => el.classList.remove('active'));
+  const navEl = document.querySelector(`[data-page="${page}"]`);
+  const pageEl = document.getElementById(`page-${page}`);
+  if (navEl) navEl.classList.add('active');
+  if (pageEl) pageEl.classList.add('active');
+  if (page === 'candidates') renderCandidateTable();
+  if (page === 'dashboard') renderDashboard();
+  if (page === 'analysis') renderAnalysis();
+  if (page === 'email') { updateEmailRecipientList(); loadEmailJSConfig(); }
+  if (page === 'upload') loadGeminiKey();
+}
+
+document.querySelectorAll('.nav-item').forEach(el => {
+  el.addEventListener('click', () => navigate(el.dataset.page));
+});
+
+// ── 통계 업데이트 ─────────────────────────────────────
+function updateStats() {
+  const total = candidates.length;
+  const review = candidates.filter(c => c.status === 'review').length;
+  const pass = candidates.filter(c => c.status === 'pass').length;
+  const fail = candidates.filter(c => c.status === 'fail').length;
+  const pending = candidates.filter(c => c.status === 'pending').length;
+
+  document.getElementById('statTotal').textContent = total;
+  document.getElementById('statReview').textContent = review + pending;
+  document.getElementById('statPass').textContent = pass;
+  document.getElementById('statFail').textContent = fail;
+  document.getElementById('hTotal').textContent = total;
+  document.getElementById('hReview').textContent = review + pending;
+  document.getElementById('hPass').textContent = pass;
+  document.getElementById('navBadge').textContent = total;
+}
+
+// ── 대시보드 렌더링 ───────────────────────────────────
+function renderDashboard() {
+  updateStats();
+
+  // 최근 지원자
+  const recent = [...candidates].reverse().slice(0, 5);
+  const recentEl = document.getElementById('recentCandidates');
+  if (recent.length === 0) {
+    recentEl.innerHTML = '<div style="text-align:center; padding:30px 0; color:var(--ink-muted); font-size:13px;">이력서를 업로드하면 여기에 표시됩니다</div>';
+  } else {
+    recentEl.innerHTML = recent.map(c => `
+      <div style="display:flex; align-items:center; justify-content:space-between; padding:8px 0; border-bottom:1px solid var(--border);" onclick="openCandidateModal(${c.id})" style="cursor:pointer;">
+        <div>
+          <div style="font-weight:700; font-size:13px;">${c.name}</div>
+          <div style="font-size:11px; color:var(--ink-muted);">${c.position} · ${c.age}세</div>
+        </div>
+        ${statusBadge(c.status)}
+      </div>`).join('');
+  }
+
+  // 지원분야별 통계
+  const posMap = {};
+  candidates.forEach(c => { posMap[c.position] = (posMap[c.position] || 0) + 1; });
+  const posEl = document.getElementById('positionStats');
+  if (Object.keys(posMap).length === 0) {
+    posEl.innerHTML = '<div style="text-align:center; padding:30px 0; color:var(--ink-muted); font-size:13px;">데이터가 없습니다</div>';
+  } else {
+    const max = Math.max(...Object.values(posMap));
+    posEl.innerHTML = Object.entries(posMap).map(([pos, cnt]) => `
+      <div style="margin-bottom:10px;">
+        <div style="display:flex; justify-content:space-between; font-size:12px; margin-bottom:4px;">
+          <span style="font-weight:600;">${pos}</span>
+          <span style="color:var(--ink-muted);">${cnt}명</span>
+        </div>
+        <div class="progress-bar"><div class="progress-fill" style="width:${(cnt/max*100).toFixed(0)}%"></div></div>
+      </div>`).join('');
+  }
+}
+
+// ── Gemini API 키 관리 ────────────────────────────────
+function saveGeminiKey() {
+  const key = document.getElementById('geminiApiKey').value.trim();
+  if (!key) { alert('API 키를 입력해주세요.'); return; }
+  localStorage.setItem('geminiApiKey', key);
+  const el = document.getElementById('geminiKeyStatus');
+  el.textContent = '✅ 저장되었습니다!';
+  el.style.color = 'var(--accent3)';
+  setTimeout(() => el.textContent = '', 3000);
+}
+
+function loadGeminiKey() {
+  const key = localStorage.getItem('geminiApiKey') || '';
+  const el = document.getElementById('geminiApiKey');
+  if (el && key) {
+    el.value = key;
+    document.getElementById('geminiKeyStatus').textContent = '✅ 저장된 키가 있습니다';
+    document.getElementById('geminiKeyStatus').style.color = 'var(--accent3)';
+  }
+}
+
+// ── PDF 업로드 처리 ───────────────────────────────────
+const uploadZone = document.getElementById('uploadZone');
+uploadZone.addEventListener('dragover', e => { e.preventDefault(); uploadZone.classList.add('drag-over'); });
+uploadZone.addEventListener('dragleave', () => uploadZone.classList.remove('drag-over'));
+uploadZone.addEventListener('drop', e => {
+  e.preventDefault();
+  uploadZone.classList.remove('drag-over');
+  const files = Array.from(e.dataTransfer.files).filter(f => f.type === 'application/pdf');
+  if (files.length) processFiles(files);
+});
+
+function handlePDFUpload(event) {
+  const files = Array.from(event.target.files);
+  if (files.length) processFiles(files);
+}
+
+async function processFiles(files) {
+  const apiKey = localStorage.getItem('geminiApiKey');
+  if (!apiKey) {
+    alert('먼저 Gemini API 키를 입력하고 저장해주세요!\n\n무료 발급: aistudio.google.com → Get API Key');
+    return;
+  }
+
+  extractedQueue = [];
+  document.getElementById('uploadProgress').style.display = 'block';
+  document.getElementById('extractedResult').style.display = 'none';
+
+  const progressList = document.getElementById('progressList');
+  progressList.innerHTML = files.map((f, i) => `
+    <div style="display:flex; align-items:center; gap:12px; padding:10px 0; border-bottom:1px solid var(--border);">
+      <div style="font-size:20px;">📄</div>
+      <div style="flex:1;">
+        <div style="font-weight:600; font-size:13px;">${f.name}</div>
+        <div id="prog-status-${i}" style="font-size:11px; color:var(--ink-muted);">대기 중...</div>
+        <div class="progress-bar" style="margin-top:4px;"><div class="progress-fill" id="prog-bar-${i}" style="width:0%"></div></div>
+      </div>
+    </div>`).join('');
+
+  for (let i = 0; i < files.length; i++) {
+    await processOnePDF(files[i], i);
+  }
+  renderExtractedForms();
+}
+
+async function processOnePDF(file, idx) {
+  const statusEl = document.getElementById(`prog-status-${idx}`);
+  const barEl = document.getElementById(`prog-bar-${idx}`);
+  const apiKey = localStorage.getItem('geminiApiKey');
+
+  statusEl.textContent = 'PDF 읽는 중...';
+  barEl.style.width = '20%';
+
+  const base64 = await fileToBase64(file);
+
+  statusEl.innerHTML = '<div class="loading"><span></span><span></span><span></span></div> Gemini AI 분석 중...';
+  barEl.style.width = '60%';
+
+  const prompt = `이 이력서 PDF에서 다음 정보를 추출해서 반드시 JSON 형식으로만 응답하세요. 다른 텍스트는 절대 포함하지 마세요.
+
+{
+  "name": "이름",
+  "age": 나이(숫자, 모르면 0),
+  "gender": "성별(남/여/미상)",
+  "phone": "연락처",
+  "email": "이메일",
+  "address": "주소(시/도 수준)",
+  "education": "최종학력(고졸/전문대졸/대졸/대학원졸)",
+  "school": "학교명",
+  "major": "전공",
+  "experience_years": 경력년수(숫자, 신입이면 0),
+  "position": "지원분야(이력서에서 파악)",
+  "skills": "주요스킬(쉼표구분)",
+  "summary": "한줄요약(50자이내)"
+}`;
+
+  try {
+    const response = await fetch(
+      `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`,
+      {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          contents: [{
+            parts: [
+              { inline_data: { mime_type: 'application/pdf', data: base64 } },
+              { text: prompt }
+            ]
+          }]
+        })
+      }
+    );
+
+    const data = await response.json();
+    let text = data.candidates?.[0]?.content?.parts?.[0]?.text || '{}';
+    text = text.replace(/```json|```/g, '').trim();
+
+    let parsed = {};
+    try { parsed = JSON.parse(text); } catch(e) { parsed = {}; }
+
+    barEl.style.width = '100%';
+    statusEl.textContent = '✅ 추출 완료';
+    statusEl.style.color = 'var(--accent3)';
+
+    extractedQueue.push({
+      ...parsed,
+      fileName: file.name,
+      status: 'pending',
+      memo: '',
+      registeredAt: new Date().toLocaleDateString('ko-KR')
+    });
+
+  } catch(e) {
+    barEl.style.width = '100%';
+    barEl.style.background = 'var(--accent)';
+    statusEl.textContent = '⚠️ 추출 실패 — 수동으로 입력해주세요';
+    extractedQueue.push({
+      name: file.name.replace('.pdf',''),
+      age: 0, gender: '미상', phone: '', email: '',
+      address: '', education: '', school: '', major: '',
+      experience_years: 0, position: '', skills: '', summary: '',
+      fileName: file.name, status: 'pending', memo: '',
+      registeredAt: new Date().toLocaleDateString('ko-KR')
+    });
+  }
+}
+}
+
+function fileToBase64(file) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve(reader.result.split(',')[1]);
+    reader.onerror = reject;
+    reader.readAsDataURL(file);
+  });
+}
+
+function renderExtractedForms() {
+  document.getElementById('extractedResult').style.display = 'block';
+  const container = document.getElementById('extractedForms');
+  container.innerHTML = extractedQueue.map((c, i) => `
+    <div style="border:1px solid var(--border); border-radius:10px; padding:16px; margin-bottom:14px; background:var(--surface2);">
+      <div style="font-weight:700; margin-bottom:12px; font-size:13px;">📄 ${c.fileName}</div>
+      <div class="grid-2" style="gap:10px;">
+        <div class="form-group" style="margin-bottom:8px;">
+          <label>이름</label>
+          <input type="text" id="eq-name-${i}" value="${c.name || ''}">
+        </div>
+        <div class="form-group" style="margin-bottom:8px;">
+          <label>지원분야</label>
+          <input type="text" id="eq-position-${i}" value="${c.position || ''}">
+        </div>
+        <div class="form-group" style="margin-bottom:8px;">
+          <label>나이</label>
+          <input type="number" id="eq-age-${i}" value="${c.age || ''}">
+        </div>
+        <div class="form-group" style="margin-bottom:8px;">
+          <label>성별</label>
+          <select id="eq-gender-${i}">
+            <option ${c.gender==='남'?'selected':''}>남</option>
+            <option ${c.gender==='여'?'selected':''}>여</option>
+            <option ${c.gender==='미상'?'selected':''}>미상</option>
+          </select>
+        </div>
+        <div class="form-group" style="margin-bottom:8px;">
+          <label>연락처</label>
+          <input type="text" id="eq-phone-${i}" value="${c.phone || ''}">
+        </div>
+        <div class="form-group" style="margin-bottom:8px;">
+          <label>이메일</label>
+          <input type="text" id="eq-email-${i}" value="${c.email || ''}">
+        </div>
+        <div class="form-group" style="margin-bottom:8px;">
+          <label>주소</label>
+          <input type="text" id="eq-address-${i}" value="${c.address || ''}">
+        </div>
+        <div class="form-group" style="margin-bottom:8px;">
+          <label>최종학력</label>
+          <select id="eq-education-${i}">
+            <option ${c.education==='고졸'?'selected':''}>고졸</option>
+            <option ${c.education==='전문대졸'?'selected':''}>전문대졸</option>
+            <option ${c.education==='대졸'?'selected':''}>대졸</option>
+            <option ${c.education==='대학원졸'?'selected':''}>대학원졸</option>
+          </select>
+        </div>
+        <div class="form-group" style="margin-bottom:8px;">
+          <label>학교명</label>
+          <input type="text" id="eq-school-${i}" value="${c.school || ''}">
+        </div>
+        <div class="form-group" style="margin-bottom:8px;">
+          <label>전공</label>
+          <input type="text" id="eq-major-${i}" value="${c.major || ''}">
+        </div>
+        <div class="form-group" style="margin-bottom:8px;">
+          <label>경력(년)</label>
+          <input type="number" id="eq-exp-${i}" value="${c.experience_years || 0}">
+        </div>
+        <div class="form-group" style="margin-bottom:8px;">
+          <label>주요 스킬</label>
+          <input type="text" id="eq-skills-${i}" value="${c.skills || ''}">
+        </div>
+      </div>
+      <div class="form-group" style="margin-bottom:0;">
+        <label>한줄 요약</label>
+        <input type="text" id="eq-summary-${i}" value="${c.summary || ''}">
+      </div>
+    </div>`).join('');
+}
+
+function saveAllCandidates() {
+  extractedQueue.forEach((c, i) => {
+    const newCandidate = {
+      id: Date.now() + i,
+      name: document.getElementById(`eq-name-${i}`)?.value || c.name,
+      position: document.getElementById(`eq-position-${i}`)?.value || c.position,
+      age: parseInt(document.getElementById(`eq-age-${i}`)?.value) || c.age,
+      gender: document.getElementById(`eq-gender-${i}`)?.value || c.gender,
+      phone: document.getElementById(`eq-phone-${i}`)?.value || c.phone,
+      email: document.getElementById(`eq-email-${i}`)?.value || c.email,
+      address: document.getElementById(`eq-address-${i}`)?.value || c.address,
+      education: document.getElementById(`eq-education-${i}`)?.value || c.education,
+      school: document.getElementById(`eq-school-${i}`)?.value || c.school,
+      major: document.getElementById(`eq-major-${i}`)?.value || c.major,
+      experience_years: parseInt(document.getElementById(`eq-exp-${i}`)?.value) || 0,
+      skills: document.getElementById(`eq-skills-${i}`)?.value || c.skills,
+      summary: document.getElementById(`eq-summary-${i}`)?.value || c.summary,
+      status: 'pending',
+      memo: '',
+      registeredAt: new Date().toLocaleDateString('ko-KR')
+    };
+    candidates.push(newCandidate);
+  });
+
+  localStorage.setItem('recruitCandidates', JSON.stringify(candidates));
+  updateStats();
+  updatePositionFilter();
+  alert(`✅ ${extractedQueue.length}명의 지원자가 등록되었습니다!`);
+  resetUpload();
+  navigate('candidates');
+}
+
+function resetUpload() {
+  extractedQueue = [];
+  document.getElementById('uploadProgress').style.display = 'none';
+  document.getElementById('extractedResult').style.display = 'none';
+  document.getElementById('pdfInput').value = '';
+}
+
+// ── 지원자 목록 ───────────────────────────────────────
+function statusBadge(status) {
+  const map = {
+    pending: ['검토 대기', 'status-pending'],
+    review: ['검토 중', 'status-review'],
+    pass: ['✓ 합격', 'status-pass'],
+    fail: ['✗ 불합격', 'status-fail'],
+    hold: ['보류', 'status-hold']
+  };
+  const [label, cls] = map[status] || ['미정', 'status-hold'];
+  return `<span class="status-badge ${cls}">${label}</span>`;
+}
+
+function renderCandidateTable() {
+  const search = document.getElementById('searchInput')?.value.toLowerCase() || '';
+  const statusFilter = document.getElementById('filterStatus')?.value || '';
+  const posFilter = document.getElementById('filterPosition')?.value || '';
+
+  let filtered = candidates.filter(c => {
+    const matchSearch = !search || c.name?.toLowerCase().includes(search) || c.position?.toLowerCase().includes(search);
+    const matchStatus = !statusFilter || c.status === statusFilter;
+    const matchPos = !posFilter || c.position === posFilter;
+    return matchSearch && matchStatus && matchPos;
+  });
+
+  const tbody = document.getElementById('candidateTableBody');
+  if (filtered.length === 0) {
+    tbody.innerHTML = '<tr><td colspan="9" style="text-align:center; padding:40px; color:var(--ink-muted);">지원자가 없습니다</td></tr>';
+    return;
+  }
+
+  tbody.innerHTML = filtered.map(c => `
+    <tr>
+      <td>
+        <div class="candidate-name">${c.name || '-'}</div>
+        <div class="candidate-meta">${c.summary || ''}</div>
+      </td>
+      <td><strong>${c.position || '-'}</strong></td>
+      <td>${c.age ? c.age + '세' : '-'}</td>
+      <td>${c.education || '-'}<br><span style="font-size:11px; color:var(--ink-muted);">${c.school || ''} ${c.major || ''}</span></td>
+      <td>${c.experience_years ? c.experience_years + '년' : '신입'}</td>
+      <td style="font-size:12px;">${c.phone || '-'}</td>
+      <td>
+        <select onchange="updateStatus(${c.id}, this.value)" style="width:100px; padding:4px 6px; font-size:11px;">
+          <option value="pending" ${c.status==='pending'?'selected':''}>검토 대기</option>
+          <option value="review" ${c.status==='review'?'selected':''}>검토 중</option>
+          <option value="pass" ${c.status==='pass'?'selected':''}>합격</option>
+          <option value="fail" ${c.status==='fail'?'selected':''}>불합격</option>
+          <option value="hold" ${c.status==='hold'?'selected':''}>보류</option>
+        </select>
+      </td>
+      <td style="font-size:11px; color:var(--ink-muted);">${c.registeredAt || '-'}</td>
+      <td>
+        <div style="display:flex; gap:4px;">
+          <button class="btn btn-secondary" style="padding:4px 8px; font-size:11px;" onclick="openCandidateModal(${c.id})">상세</button>
+          <button class="btn btn-danger" style="padding:4px 8px; font-size:11px;" onclick="deleteCandidate(${c.id})">삭제</button>
+        </div>
+      </td>
+    </tr>`).join('');
+}
+
+function updatePositionFilter() {
+  const positions = [...new Set(candidates.map(c => c.position).filter(Boolean))];
+  const sel = document.getElementById('filterPosition');
+  if (!sel) return;
+  sel.innerHTML = '<option value="">전체 지원분야</option>' +
+    positions.map(p => `<option value="${p}">${p}</option>`).join('');
+}
+
+function updateStatus(id, status) {
+  const c = candidates.find(c => c.id === id);
+  if (c) {
+    c.status = status;
+    localStorage.setItem('recruitCandidates', JSON.stringify(candidates));
+    updateStats();
+  }
+}
+
+function deleteCandidate(id) {
+  if (!confirm('정말 삭제하시겠습니까?')) return;
+  candidates = candidates.filter(c => c.id !== id);
+  localStorage.setItem('recruitCandidates', JSON.stringify(candidates));
+  updateStats();
+  renderCandidateTable();
+}
+
+// ── 지원자 상세 모달 ──────────────────────────────────
+function openCandidateModal(id) {
+  const c = candidates.find(c => c.id === id);
+  if (!c) return;
+
+  document.getElementById('modalTitle').textContent = `${c.name} — ${c.position}`;
+  document.getElementById('modalContent').innerHTML = `
+    <div class="grid-2" style="gap:10px; margin-bottom:16px;">
+      <div><label>이름</label><input type="text" id="mod-name" value="${c.name || ''}"></div>
+      <div><label>지원분야</label><input type="text" id="mod-position" value="${c.position || ''}"></div>
+      <div><label>나이</label><input type="number" id="mod-age" value="${c.age || ''}"></div>
+      <div><label>성별</label><select id="mod-gender">
+        <option ${c.gender==='남'?'selected':''}>남</option>
+        <option ${c.gender==='여'?'selected':''}>여</option>
+        <option ${c.gender==='미상'?'selected':''}>미상</option>
+      </select></div>
+      <div><label>연락처</label><input type="text" id="mod-phone" value="${c.phone || ''}"></div>
+      <div><label>이메일</label><input type="text" id="mod-email" value="${c.email || ''}"></div>
+      <div><label>주소</label><input type="text" id="mod-address" value="${c.address || ''}"></div>
+      <div><label>최종학력</label><select id="mod-education">
+        <option ${c.education==='고졸'?'selected':''}>고졸</option>
+        <option ${c.education==='전문대졸'?'selected':''}>전문대졸</option>
+        <option ${c.education==='대졸'?'selected':''}>대졸</option>
+        <option ${c.education==='대학원졸'?'selected':''}>대학원졸</option>
+      </select></div>
+      <div><label>학교</label><input type="text" id="mod-school" value="${c.school || ''}"></div>
+      <div><label>전공</label><input type="text" id="mod-major" value="${c.major || ''}"></div>
+      <div><label>경력(년)</label><input type="number" id="mod-exp" value="${c.experience_years || 0}"></div>
+      <div><label>합격 여부</label><select id="mod-status">
+        <option value="pending" ${c.status==='pending'?'selected':''}>검토 대기</option>
+        <option value="review" ${c.status==='review'?'selected':''}>검토 중</option>
+        <option value="pass" ${c.status==='pass'?'selected':''}>합격</option>
+        <option value="fail" ${c.status==='fail'?'selected':''}>불합격</option>
+        <option value="hold" ${c.status==='hold'?'selected':''}>보류</option>
+      </select></div>
+    </div>
+    <div class="form-group">
+      <label>주요 스킬</label>
+      <input type="text" id="mod-skills" value="${c.skills || ''}">
+    </div>
+    <div class="form-group">
+      <label>메모 / 평가 의견</label>
+      <textarea id="mod-memo" rows="3">${c.memo || ''}</textarea>
+    </div>
+    <div style="display:flex; gap:8px; margin-top:16px;">
+      <button class="btn btn-accent" onclick="saveCandidateModal(${id})">💾 저장</button>
+      <button class="btn btn-secondary" onclick="aiReviewCandidate(${id})">🤖 AI 검토</button>
+      <button class="btn btn-secondary" onclick="closeModal()">취소</button>
+    </div>
+    <div id="modalAIResult" style="display:none; margin-top:12px; background:var(--surface2); border:1px solid var(--border); border-radius:8px; padding:14px; font-size:13px; line-height:1.7;"></div>`;
+
+  document.getElementById('candidateModal').classList.add('open');
+}
+
+function saveCandidateModal(id) {
+  const c = candidates.find(c => c.id === id);
+  if (!c) return;
+  c.name = document.getElementById('mod-name').value;
+  c.position = document.getElementById('mod-position').value;
+  c.age = parseInt(document.getElementById('mod-age').value) || 0;
+  c.gender = document.getElementById('mod-gender').value;
+  c.phone = document.getElementById('mod-phone').value;
+  c.email = document.getElementById('mod-email').value;
+  c.address = document.getElementById('mod-address').value;
+  c.education = document.getElementById('mod-education').value;
+  c.school = document.getElementById('mod-school').value;
+  c.major = document.getElementById('mod-major').value;
+  c.experience_years = parseInt(document.getElementById('mod-exp').value) || 0;
+  c.status = document.getElementById('mod-status').value;
+  c.skills = document.getElementById('mod-skills').value;
+  c.memo = document.getElementById('mod-memo').value;
+  localStorage.setItem('recruitCandidates', JSON.stringify(candidates));
+  updateStats();
+  renderCandidateTable();
+  closeModal();
+}
+
+async function aiReviewCandidate(id) {
+  const c = candidates.find(c => c.id === id);
+  if (!c) return;
+  const el = document.getElementById('modalAIResult');
+  el.style.display = 'block';
+  el.innerHTML = '<div class="loading"><span></span><span></span><span></span></div> AI가 검토 중...';
+
+  const prompt = `다음 지원자 정보를 바탕으로 채용 검토 의견을 작성해주세요.
+
+이름: ${c.name}
+지원분야: ${c.position}
+나이: ${c.age}세
+학력: ${c.education} (${c.school} ${c.major})
+경력: ${c.experience_years}년
+스킬: ${c.skills}
+요약: ${c.summary}
+
+다음을 포함해 주세요:
+1. 지원자 강점
+2. 우려 사항
+3. 면접 추천 질문 3개
+4. 종합 의견 (합격 권고 여부)`;
+
+  await callClaude(prompt, 'modalAIResult');
+}
+
+function closeModal() {
+  document.getElementById('candidateModal').classList.remove('open');
+}
+
+// ── 분석 ─────────────────────────────────────────────
+function renderAnalysis() {
+  const statusMap = {pending:'검토 대기', review:'검토 중', pass:'합격', fail:'불합격', hold:'보류'};
+  const statusColors = {pending:'var(--accent4)', review:'var(--accent2)', pass:'var(--accent3)', fail:'var(--accent)', hold:'var(--ink-muted)'};
+
+  const statusCount = {};
+  candidates.forEach(c => { statusCount[c.status] = (statusCount[c.status] || 0) + 1; });
+
+  const statusEl = document.getElementById('statusChart');
+  if (candidates.length === 0) {
+    statusEl.innerHTML = '<div style="text-align:center; padding:30px; color:var(--ink-muted);">데이터 없음</div>';
+  } else {
+    statusEl.innerHTML = Object.entries(statusCount).map(([s, cnt]) => `
+      <div style="margin-bottom:10px;">
+        <div style="display:flex; justify-content:space-between; font-size:12px; margin-bottom:4px;">
+          <span style="font-weight:600;">${statusMap[s] || s}</span>
+          <span style="color:var(--ink-muted);">${cnt}명 (${(cnt/candidates.length*100).toFixed(0)}%)</span>
+        </div>
+        <div class="progress-bar"><div class="progress-fill" style="width:${(cnt/candidates.length*100).toFixed(0)}%; background:${statusColors[s]}"></div></div>
+      </div>`).join('');
+  }
+
+  const posMap = {};
+  candidates.forEach(c => { if (c.position) posMap[c.position] = (posMap[c.position] || 0) + 1; });
+  const posEl = document.getElementById('positionChart');
+  if (Object.keys(posMap).length === 0) {
+    posEl.innerHTML = '<div style="text-align:center; padding:30px; color:var(--ink-muted);">데이터 없음</div>';
+  } else {
+    const max = Math.max(...Object.values(posMap));
+    posEl.innerHTML = Object.entries(posMap).map(([p, cnt]) => `
+      <div style="margin-bottom:10px;">
+        <div style="display:flex; justify-content:space-between; font-size:12px; margin-bottom:4px;">
+          <span style="font-weight:600;">${p}</span>
+          <span style="color:var(--ink-muted);">${cnt}명</span>
+        </div>
+        <div class="progress-bar"><div class="progress-fill" style="width:${(cnt/max*100).toFixed(0)}%"></div></div>
+      </div>`).join('');
+  }
+}
+
+async function generateAnalysisReport() {
+  const el = document.getElementById('analysisReport');
+  el.style.display = 'block';
+  el.innerHTML = '분석 중...';
+
+  const total = candidates.length;
+  const pass = candidates.filter(c => c.status === 'pass').length;
+  const positions = [...new Set(candidates.map(c => c.position).filter(Boolean))];
+  const avgAge = candidates.length ? Math.round(candidates.reduce((s,c) => s + (c.age||0), 0) / candidates.length) : 0;
+
+  const prompt = `채용 담당자로서 다음 채용 현황을 분석해 주세요.
+
+총 지원자: ${total}명
+합격자: ${pass}명
+합격률: ${total ? (pass/total*100).toFixed(1) : 0}%
+평균 나이: ${avgAge}세
+지원분야: ${positions.join(', ')}
+
+다음을 포함한 분석 리포트를 작성해 주세요:
+1. 전반적인 채용 현황 요약
+2. 지원 분야별 경쟁률 분석
+3. 개선 권고사항
+4. 다음 채용 시 고려할 점`;
+
+  await callClaude(prompt, 'analysisReport');
+}
+
+// ── 엑셀 다운로드 ─────────────────────────────────────
+function exportToExcel() {
+  if (candidates.length === 0) { alert('다운로드할 데이터가 없습니다.'); return; }
+
+  const statusMap = {pending:'검토 대기', review:'검토 중', pass:'합격', fail:'불합격', hold:'보류'};
+  let csv = '이름,지원분야,나이,성별,연락처,이메일,주소,최종학력,학교,전공,경력(년),주요스킬,합격여부,메모,등록일\n';
+  candidates.forEach(c => {
+    csv += [
+      c.name, c.position, c.age, c.gender, c.phone, c.email,
+      c.address, c.education, c.school, c.major, c.experience_years,
+      c.skills, statusMap[c.status] || c.status, c.memo?.replace(/,/g,'；'), c.registeredAt
+    ].map(v => `"${v || ''}"`).join(',') + '\n';
+  });
+
+  const blob = new Blob(['\uFEFF' + csv], {type:'text/csv;charset=utf-8;'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = `채용관리_${new Date().toLocaleDateString('ko-KR').replace(/\./g,'').replace(/ /g,'')}.csv`;
+  a.click();
+}
+
+// ── AI Chat ──────────────────────────────────────────
+async function sendChat() {
+  const input = document.getElementById('chatInput');
+  const msg = input.value.trim();
+  if (!msg) return;
+  appendMsg(msg, 'user');
+  input.value = '';
+
+  const aiDiv = appendMsg('<div class="loading"><span></span><span></span><span></span></div>', 'ai');
+
+  const systemPrompt = `당신은 채용 관리 전문 AI 에이전트입니다. 다음 분야를 전문으로 합니다:
+- 채용 공고 작성 및 직무 분석
+- 이력서 검토 기준 및 평가 방법
+- 면접 질문 추천 및 평가 기준
+- 합격/불합격 판단 가이드
+- 채용 관련 노무 법규 안내
+
+현재 등록된 지원자 수: ${candidates.length}명
+항상 한국어로 친절하게 답변해 주세요.`;
+
+  try {
+    const response = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 1000,
+        system: systemPrompt,
+        messages: [{ role: 'user', content: msg }]
+      })
+    });
+    const data = await response.json();
+    const text = data.content?.map(b => b.text).join('') || '응답 없음';
+    aiDiv.innerHTML = text.replace(/\n/g, '<br>').replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+  } catch(e) {
+    aiDiv.innerHTML = '⚠️ 오류가 발생했습니다.';
+  }
+}
+
+function appendMsg(text, role) {
+  const container = document.getElementById('chatMessages');
+  const div = document.createElement('div');
+  div.className = `msg msg-${role}`;
+  div.innerHTML = text;
+  container.appendChild(div);
+  container.scrollTop = container.scrollHeight;
+  return div;
+}
+
+document.getElementById('chatInput').addEventListener('keydown', e => {
+  if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendChat(); }
+});
+
+// ── Claude API ────────────────────────────────────────
+async function callClaude(prompt, targetId) {
+  try {
+    const response = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 1000,
+        messages: [{ role: 'user', content: prompt }]
+      })
+    });
+    const data = await response.json();
+    const text = data.content?.map(b => b.text).join('') || '응답 없음';
+    document.getElementById(targetId).innerHTML = text.replace(/\n/g, '<br>').replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+  } catch(e) {
+    document.getElementById(targetId).innerHTML = '⚠️ AI 연결 오류';
+  }
+}
+
+// ── 초기화 ────────────────────────────────────────────
+updateStats();
+updatePositionFilter();
+renderDashboard();
+loadEmailJSConfig();
+loadEmailTemplate();
+loadBulkTemplate();
+renderEmailLog();
+
+// 모달 외부 클릭 닫기
+document.getElementById('candidateModal').addEventListener('click', function(e) {
+  if (e.target === this) closeModal();
+});
+
+// ── 이메일 탭 전환 ────────────────────────────────────
+function switchEmailTab(el, targetId) {
+  el.closest('.tabs').querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  el.classList.add('active');
+  ['email-template','email-bulk','email-log'].forEach(id => {
+    document.getElementById(id).style.display = 'none';
+  });
+  document.getElementById(targetId).style.display = 'block';
+  if (targetId === 'email-log') renderEmailLog();
+}
+
+// ── EmailJS 설정 저장/불러오기 ────────────────────────
+function saveEmailJSConfig() {
+  const cfg = {
+    serviceId: document.getElementById('ejsServiceId').value.trim(),
+    templateId: document.getElementById('ejsTemplateId').value.trim(),
+    publicKey: document.getElementById('ejsPublicKey').value.trim()
+  };
+  localStorage.setItem('emailJSConfig', JSON.stringify(cfg));
+  const el = document.getElementById('ejsConfigStatus');
+  el.textContent = '✅ 설정이 저장되었습니다!';
+  el.style.color = 'var(--accent3)';
+  setTimeout(() => el.textContent = '', 3000);
+}
+
+function loadEmailJSConfig() {
+  const cfg = JSON.parse(localStorage.getItem('emailJSConfig') || '{}');
+  if (cfg.serviceId) document.getElementById('ejsServiceId').value = cfg.serviceId;
+  if (cfg.templateId) document.getElementById('ejsTemplateId').value = cfg.templateId;
+  if (cfg.publicKey) document.getElementById('ejsPublicKey').value = cfg.publicKey;
+}
+
+function getEmailJSConfig() {
+  return JSON.parse(localStorage.getItem('emailJSConfig') || '{}');
+}
+
+// ── 수신자 목록 업데이트 ──────────────────────────────
+function updateEmailRecipientList() {
+  const sel = document.getElementById('emailRecipient');
+  if (!sel) return;
+  sel.innerHTML = '<option value="">— 지원자 선택 —</option>' +
+    candidates.map(c => `<option value="${c.id}">${c.name} (${c.position}) — ${c.email || '이메일 없음'}</option>`).join('');
+}
+
+document.getElementById('emailRecipient')?.addEventListener('change', function() {
+  const c = candidates.find(c => c.id === parseInt(this.value));
+  if (c) {
+    document.getElementById('emailTo').value = c.email || '';
+    updateEmailPreview();
+  }
+});
+
+// ── 이메일 템플릿 ─────────────────────────────────────
+const EMAIL_TEMPLATES = {
+  pass: {
+    subject: '[채용 결과 안내] 서류전형 합격을 축하드립니다',
+    body: `안녕하세요, {이름}님.
+
+저희 회사에 지원해 주셔서 감사합니다.
+
+서류전형 검토 결과, {이름}님을 합격자로 선발하게 되었음을 알려드립니다. 🎉
+
+다음 전형(면접)에 대한 안내는 별도로 연락드릴 예정입니다.
+
+앞으로도 잘 부탁드립니다.
+
+감사합니다.`
+  },
+  fail: {
+    subject: '[채용 결과 안내] 지원해 주셔서 감사합니다',
+    body: `안녕하세요, {이름}님.
+
+저희 회사에 관심을 가지고 지원해 주셔서 진심으로 감사드립니다.
+
+신중한 검토 끝에, 이번에는 함께하기 어렵게 되었음을 말씀드립니다.
+부족한 부분이 있다면 내부 사정에 의한 것으로, {이름}님의 역량이 부족해서가 아님을 말씀드립니다.
+
+앞으로의 취업 활동에 좋은 결과가 있으시길 바랍니다.
+
+감사합니다.`
+  },
+  interview: {
+    subject: '[면접 안내] 면접 일정을 안내드립니다',
+    body: `안녕하세요, {이름}님.
+
+서류전형 합격을 다시 한번 축하드립니다.
+
+아래와 같이 면접 일정을 안내드립니다.
+
+📅 면접 일시: 
+📍 면접 장소: 
+⏱ 소요 시간: 약 1시간
+
+면접 시 신분증을 지참하여 주시기 바랍니다.
+일정 변경이 필요하신 경우 회신 부탁드립니다.
+
+감사합니다.`
+  },
+  document: {
+    subject: '[접수 확인] 지원서가 정상 접수되었습니다',
+    body: `안녕하세요, {이름}님.
+
+저희 회사에 지원해 주셔서 감사합니다.
+
+{이름}님의 지원서가 정상적으로 접수되었음을 안내드립니다.
+서류 검토 후 결과를 순차적으로 안내드릴 예정입니다.
+
+감사합니다.`
+  },
+  custom: { subject: '', body: '' }
+};
+
+function loadEmailTemplate() {
+  const type = document.getElementById('emailType')?.value;
+  if (!type || type === 'custom') return;
+  const t = EMAIL_TEMPLATES[type];
+  if (t) {
+    document.getElementById('emailSubject').value = t.subject;
+    document.getElementById('emailBody').value = t.body;
+    updateEmailPreview();
+  }
+}
+
+function loadBulkTemplate() {
+  const type = document.getElementById('bulkEmailType')?.value;
+  if (!type) return;
+  const t = EMAIL_TEMPLATES[type];
+  if (t) {
+    document.getElementById('bulkSubject').value = t.subject;
+    document.getElementById('bulkBody').value = t.body;
+  }
+}
+
+// ── 이메일 미리보기 실시간 업데이트 ──────────────────
+['emailSubject','emailBody','emailTo'].forEach(id => {
+  document.getElementById(id)?.addEventListener('input', updateEmailPreview);
+});
+
+function updateEmailPreview() {
+  const subject = document.getElementById('emailSubject')?.value || '';
+  const body = document.getElementById('emailBody')?.value || '';
+  const to = document.getElementById('emailTo')?.value || '';
+  const recipId = document.getElementById('emailRecipient')?.value;
+  const c = candidates.find(c => c.id === parseInt(recipId));
+  const name = c?.name || '{이름}';
+  const bodyReplaced = body.replace(/\{이름\}/g, name);
+
+  document.getElementById('emailPreview').innerHTML = `
+    <div style="border-bottom:1px solid var(--border); padding-bottom:10px; margin-bottom:14px;">
+      <div style="font-size:11px; color:var(--ink-muted); margin-bottom:4px;">수신</div>
+      <div style="font-size:13px;">${to || '(수신자 미선택)'}</div>
+    </div>
+    <div style="border-bottom:1px solid var(--border); padding-bottom:10px; margin-bottom:14px;">
+      <div style="font-size:11px; color:var(--ink-muted); margin-bottom:4px;">제목</div>
+      <div style="font-size:14px; font-weight:700;">${subject || '(제목 없음)'}</div>
+    </div>
+    <div style="font-size:13px; line-height:1.8; white-space:pre-wrap;">${bodyReplaced || '(본문 없음)'}</div>`;
+}
+
+// ── 이메일 발송 (EmailJS) ─────────────────────────────
+function loadEmailJS(callback) {
+  if (window.emailjs) { callback(); return; }
+  const s = document.createElement('script');
+  s.src = 'https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js';
+  s.onload = () => {
+    const cfg = getEmailJSConfig();
+    if (cfg.publicKey) emailjs.init(cfg.publicKey);
+    callback();
+  };
+  document.head.appendChild(s);
+}
+
+async function sendEmail() {
+  const cfg = getEmailJSConfig();
+  if (!cfg.serviceId || !cfg.templateId || !cfg.publicKey) {
+    alert('EmailJS 설정을 먼저 입력하고 저장해주세요!');
+    return;
+  }
+
+  const to = document.getElementById('emailTo').value.trim();
+  const subject = document.getElementById('emailSubject').value.trim();
+  const body = document.getElementById('emailBody').value.trim();
+  const recipId = document.getElementById('emailRecipient').value;
+  const c = candidates.find(c => c.id === parseInt(recipId));
+
+  if (!to) { alert('수신자 이메일을 입력해주세요.'); return; }
+  if (!subject) { alert('제목을 입력해주세요.'); return; }
+
+  const statusEl = document.getElementById('emailSendStatus');
+  statusEl.innerHTML = '<div class="loading"><span></span><span></span><span></span></div> 발송 중...';
+
+  const bodyFinal = body.replace(/\{이름\}/g, c?.name || '');
+
+  loadEmailJS(async () => {
+    try {
+      await emailjs.send(cfg.serviceId, cfg.templateId, {
+        to_email: to,
+        to_name: c?.name || '',
+        subject: subject,
+        message: bodyFinal
+      });
+
+      statusEl.textContent = '✅ 이메일이 성공적으로 발송되었습니다!';
+      statusEl.style.color = 'var(--accent3)';
+      addEmailLog(c?.name || to, to, subject, '성공');
+    } catch(e) {
+      statusEl.textContent = '❌ 발송 실패: ' + (e.text || e.message || '오류');
+      statusEl.style.color = 'var(--accent)';
+      addEmailLog(c?.name || to, to, subject, '실패');
+    }
+  });
+}
+
+// ── 일괄 발송 ─────────────────────────────────────────
+function previewBulkRecipients() {
+  const target = document.getElementById('bulkTarget').value;
+  const list = target === 'all' ? candidates : candidates.filter(c => c.status === target);
+  const el = document.getElementById('bulkPreviewList');
+
+  if (list.length === 0) {
+    el.innerHTML = '<div style="color:var(--accent); font-size:13px;">해당 상태의 지원자가 없습니다.</div>';
+    return;
+  }
+
+  el.innerHTML = `<div style="background:var(--surface2); border:1px solid var(--border); border-radius:8px; padding:12px; margin-bottom:8px;">
+    <div style="font-weight:700; margin-bottom:8px; font-size:13px;">📋 발송 대상 ${list.length}명</div>
+    ${list.map(c => `<div style="display:flex; gap:8px; font-size:12px; padding:4px 0; border-bottom:1px solid var(--border);">
+      <span style="font-weight:600; width:80px;">${c.name}</span>
+      <span style="color:var(--ink-muted);">${c.email || '⚠️ 이메일 없음'}</span>
+    </div>`).join('')}
+  </div>
+  <div style="font-size:12px; color:var(--ink-muted);">⚠️ 이메일이 없는 지원자는 발송이 건너뜁니다.</div>`;
+}
+
+async function sendBulkEmail() {
+  const cfg = getEmailJSConfig();
+  if (!cfg.serviceId || !cfg.templateId || !cfg.publicKey) {
+    alert('EmailJS 설정을 먼저 입력하고 저장해주세요!');
+    return;
+  }
+
+  const target = document.getElementById('bulkTarget').value;
+  const subject = document.getElementById('bulkSubject').value.trim();
+  const bodyTemplate = document.getElementById('bulkBody').value.trim();
+  const list = (target === 'all' ? candidates : candidates.filter(c => c.status === target))
+    .filter(c => c.email);
+
+  if (list.length === 0) { alert('발송 가능한 이메일 주소가 없습니다.'); return; }
+  if (!confirm(`${list.length}명에게 이메일을 발송하시겠습니까?`)) return;
+
+  const statusEl = document.getElementById('bulkSendStatus');
+  statusEl.innerHTML = `<div class="loading"><span></span><span></span><span></span></div> 0 / ${list.length} 발송 중...`;
+
+  loadEmailJS(async () => {
+    let success = 0, fail = 0;
+    for (const c of list) {
+      const body = bodyTemplate.replace(/\{이름\}/g, c.name || '');
+      try {
+        await emailjs.send(cfg.serviceId, cfg.templateId, {
+          to_email: c.email,
+          to_name: c.name || '',
+          subject: subject,
+          message: body
+        });
+        success++;
+        addEmailLog(c.name, c.email, subject, '성공');
+      } catch(e) {
+        fail++;
+        addEmailLog(c.name, c.email, subject, '실패');
+      }
+      statusEl.innerHTML = `발송 중... ${success + fail} / ${list.length}`;
+      await new Promise(r => setTimeout(r, 500));
+    }
+    statusEl.innerHTML = `✅ 완료: 성공 ${success}건 / 실패 ${fail}건`;
+    statusEl.style.color = fail > 0 ? 'var(--accent)' : 'var(--accent3)';
+  });
+}
+
+// ── 발송 기록 ─────────────────────────────────────────
+function addEmailLog(name, email, subject, result) {
+  const logs = JSON.parse(localStorage.getItem('emailLogs') || '[]');
+  logs.unshift({
+    name, email, subject, result,
+    time: new Date().toLocaleString('ko-KR')
+  });
+  localStorage.setItem('emailLogs', JSON.stringify(logs.slice(0, 100)));
+}
+
+function renderEmailLog() {
+  const logs = JSON.parse(localStorage.getItem('emailLogs') || '[]');
+  const el = document.getElementById('emailLogContent');
+  if (!el) return;
+  if (logs.length === 0) {
+    el.innerHTML = '<div style="text-align:center; padding:30px; color:var(--ink-muted); font-size:13px;">발송 기록이 없습니다</div>';
+    return;
+  }
+  el.innerHTML = `<table class="recruit-table">
+    <thead><tr><th>이름</th><th>이메일</th><th>제목</th><th>결과</th><th>시간</th></tr></thead>
+    <tbody>${logs.map(l => `<tr>
+      <td>${l.name}</td>
+      <td style="font-size:12px;">${l.email}</td>
+      <td style="font-size:12px;">${l.subject}</td>
+      <td><span style="color:${l.result==='성공'?'var(--accent3)':'var(--accent)'}; font-weight:700;">${l.result}</span></td>
+      <td style="font-size:11px; color:var(--ink-muted);">${l.time}</td>
+    </tr>`).join('')}</tbody>
+  </table>`;
+}
+
+function clearEmailLog() {
+  if (!confirm('발송 기록을 모두 삭제하시겠습니까?')) return;
+  localStorage.removeItem('emailLogs');
+  renderEmailLog();
+}
+
+// ── AI 이메일 작성 ────────────────────────────────────
+async function aiWriteEmail() {
+  const type = document.getElementById('emailType').value;
+  const recipId = document.getElementById('emailRecipient').value;
+  const c = candidates.find(c => c.id === parseInt(recipId));
+
+  const typeMap = {pass:'합격', fail:'불합격', interview:'면접 안내', document:'서류 접수 확인', custom:'일반'};
+  const statusEl = document.getElementById('emailSendStatus');
+  statusEl.innerHTML = '<div class="loading"><span></span><span></span><span></span></div> AI가 이메일을 작성 중...';
+
+  const prompt = `채용 담당자로서 아래 상황에 맞는 정중하고 따뜻한 한국어 이메일을 작성해 주세요.
+
+이메일 유형: ${typeMap[type]} 안내
+지원자 이름: ${c?.name || '지원자'}
+지원 분야: ${c?.position || '미정'}
+
+JSON 형식으로 응답해주세요:
+{"subject": "제목", "body": "본문 내용"}`;
+
+  try {
+    const response = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 800,
+        messages: [{ role: 'user', content: prompt }]
+      })
+    });
+    const data = await response.json();
+    let text = data.content?.map(b => b.text).join('') || '{}';
+    text = text.replace(/```json|```/g, '').trim();
+    const parsed = JSON.parse(text);
+    if (parsed.subject) document.getElementById('emailSubject').value = parsed.subject;
+    if (parsed.body) document.getElementById('emailBody').value = parsed.body;
+    updateEmailPreview();
+    statusEl.textContent = '✅ AI 이메일 작성 완료!';
+    statusEl.style.color = 'var(--accent3)';
+  } catch(e) {
+    statusEl.textContent = '⚠️ AI 작성 실패. 다시 시도해주세요.';
+    statusEl.style.color = 'var(--accent)';
+  }
+}
+
+// 초기 Gemini 키 로드
+loadGeminiKey();
+</script>
+</body>
+</html>
