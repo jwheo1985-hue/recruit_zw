@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="ko">
 <head>
@@ -511,14 +512,36 @@ select option { background: white; }
     <div class="page-title">이력서 업로드</div>
     <div class="page-sub">사람인·잡코리아 등에서 다운받은 PDF 이력서를 업로드하면 AI가 자동으로 정보를 추출합니다</div>
 
+    <!-- Gemini API 키 설정 -->
+    <div class="card" style="border:2px solid var(--accent4); background:#fffbf0;">
+      <div class="card-title">🔑 Gemini API 키 설정 <span style="font-size:11px; font-weight:400; color:var(--ink-muted);">— 최초 1회만 입력 (무료)</span></div>
+      <div style="display:flex; gap:10px; align-items:flex-end;">
+        <div class="form-group" style="flex:1; margin-bottom:0;">
+          <label>Gemini API Key</label>
+          <input type="password" id="geminiApiKey" placeholder="AIza...">
+        </div>
+        <button class="btn btn-primary" onclick="saveGeminiKey()">💾 저장</button>
+      </div>
+      <div style="margin-top:8px; font-size:12px; color:var(--ink-muted);">
+        무료 발급: <a href="https://aistudio.google.com/app/apikey" target="_blank" style="color:var(--accent2);">aistudio.google.com</a> 접속 → 로그인 → <strong>Get API Key</strong> → <strong>Create API Key</strong> → 복사
+      </div>
+      <div id="geminiKeyStatus" style="margin-top:6px; font-size:12px;"></div>
+    </div>
+
     <div class="card">
       <div class="card-title">📄 PDF 이력서 업로드</div>
-      <div class="upload-zone" id="uploadZone" onclick="document.getElementById('pdfInput').click()">
-        <div class="upload-icon">📋</div>
-        <div class="upload-title">PDF 파일을 여기에 끌어다 놓으세요</div>
-        <div class="upload-sub">사람인 · 잡코리아 · 원티드 등 PDF 이력서 지원 · 클릭해서 파일 선택</div>
-        <div class="upload-sub" style="margin-top:8px; color:var(--accent);">여러 파일 동시 업로드 가능</div>
+      <!-- 직접 보이는 버튼 방식으로 변경 -->
+      <div style="margin-bottom:14px;">
+        <label for="pdfInput" style="display:inline-flex; align-items:center; gap:8px; padding:12px 20px; background:var(--accent); color:white; border-radius:8px; cursor:pointer; font-weight:700; font-size:14px; text-transform:none; letter-spacing:0;">
+          📂 컴퓨터에서 PDF 파일 선택
+        </label>
         <input type="file" id="pdfInput" accept=".pdf" multiple style="display:none;" onchange="handlePDFUpload(event)">
+        <span style="margin-left:12px; font-size:12px; color:var(--ink-muted);">여러 파일 동시 선택 가능</span>
+      </div>
+      <div class="upload-zone" id="uploadZone">
+        <div class="upload-icon">📋</div>
+        <div class="upload-title">또는 여기에 PDF를 끌어다 놓으세요</div>
+        <div class="upload-sub">사람인 · 잡코리아 · 원티드 등 PDF 이력서 지원</div>
       </div>
     </div>
 
@@ -875,6 +898,27 @@ function renderDashboard() {
   }
 }
 
+// ── Gemini API 키 관리 ────────────────────────────────
+function saveGeminiKey() {
+  const key = document.getElementById('geminiApiKey').value.trim();
+  if (!key) { alert('API 키를 입력해주세요.'); return; }
+  localStorage.setItem('geminiApiKey', key);
+  const el = document.getElementById('geminiKeyStatus');
+  el.textContent = '✅ 저장되었습니다!';
+  el.style.color = 'var(--accent3)';
+  setTimeout(() => el.textContent = '', 3000);
+}
+
+function loadGeminiKey() {
+  const key = localStorage.getItem('geminiApiKey') || '';
+  const el = document.getElementById('geminiApiKey');
+  if (el && key) {
+    el.value = key;
+    document.getElementById('geminiKeyStatus').textContent = '✅ 저장된 키가 있습니다';
+    document.getElementById('geminiKeyStatus').style.color = 'var(--accent3)';
+  }
+}
+
 // ── PDF 업로드 처리 ───────────────────────────────────
 const uploadZone = document.getElementById('uploadZone');
 uploadZone.addEventListener('dragover', e => { e.preventDefault(); uploadZone.classList.add('drag-over'); });
@@ -892,13 +936,19 @@ function handlePDFUpload(event) {
 }
 
 async function processFiles(files) {
+  const apiKey = localStorage.getItem('geminiApiKey');
+  if (!apiKey) {
+    alert('먼저 Gemini API 키를 입력하고 저장해주세요!\n\n무료 발급: aistudio.google.com → Get API Key');
+    return;
+  }
+
   extractedQueue = [];
   document.getElementById('uploadProgress').style.display = 'block';
   document.getElementById('extractedResult').style.display = 'none';
 
   const progressList = document.getElementById('progressList');
   progressList.innerHTML = files.map((f, i) => `
-    <div id="prog-${i}" style="display:flex; align-items:center; gap:12px; padding:10px 0; border-bottom:1px solid var(--border);">
+    <div style="display:flex; align-items:center; gap:12px; padding:10px 0; border-bottom:1px solid var(--border);">
       <div style="font-size:20px;">📄</div>
       <div style="flex:1;">
         <div style="font-weight:600; font-size:13px;">${f.name}</div>
@@ -910,41 +960,23 @@ async function processFiles(files) {
   for (let i = 0; i < files.length; i++) {
     await processOnePDF(files[i], i);
   }
-
-  // 추출 결과 폼 렌더링
   renderExtractedForms();
 }
 
 async function processOnePDF(file, idx) {
   const statusEl = document.getElementById(`prog-status-${idx}`);
   const barEl = document.getElementById(`prog-bar-${idx}`);
+  const apiKey = localStorage.getItem('geminiApiKey');
 
   statusEl.textContent = 'PDF 읽는 중...';
   barEl.style.width = '20%';
 
-  // PDF를 base64로 변환
   const base64 = await fileToBase64(file);
 
-  statusEl.innerHTML = '<div class="loading"><span></span><span></span><span></span></div> AI 정보 추출 중...';
+  statusEl.innerHTML = '<div class="loading"><span></span><span></span><span></span></div> Gemini AI 분석 중...';
   barEl.style.width = '60%';
 
-  try {
-    const response = await fetch('https://api.anthropic.com/v1/messages', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        model: 'claude-sonnet-4-20250514',
-        max_tokens: 1000,
-        messages: [{
-          role: 'user',
-          content: [
-            {
-              type: 'document',
-              source: { type: 'base64', media_type: 'application/pdf', data: base64 }
-            },
-            {
-              type: 'text',
-              text: `이 이력서 PDF에서 다음 정보를 추출해서 반드시 JSON 형식으로만 응답하세요. 다른 텍스트는 절대 포함하지 마세요.
+  const prompt = `이 이력서 PDF에서 다음 정보를 추출해서 반드시 JSON 형식으로만 응답하세요. 다른 텍스트는 절대 포함하지 마세요.
 
 {
   "name": "이름",
@@ -960,15 +992,27 @@ async function processOnePDF(file, idx) {
   "position": "지원분야(이력서에서 파악)",
   "skills": "주요스킬(쉼표구분)",
   "summary": "한줄요약(50자이내)"
-}`
-            }
-          ]
-        }]
-      })
-    });
+}`;
+
+  try {
+    const response = await fetch(
+      `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`,
+      {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          contents: [{
+            parts: [
+              { inline_data: { mime_type: 'application/pdf', data: base64 } },
+              { text: prompt }
+            ]
+          }]
+        })
+      }
+    );
 
     const data = await response.json();
-    let text = data.content?.map(b => b.text).join('') || '{}';
+    let text = data.candidates?.[0]?.content?.parts?.[0]?.text || '{}';
     text = text.replace(/```json|```/g, '').trim();
 
     let parsed = {};
@@ -989,7 +1033,7 @@ async function processOnePDF(file, idx) {
   } catch(e) {
     barEl.style.width = '100%';
     barEl.style.background = 'var(--accent)';
-    statusEl.textContent = '⚠️ 추출 실패 (수동 입력 필요)';
+    statusEl.textContent = '⚠️ 추출 실패 — 수동으로 입력해주세요';
     extractedQueue.push({
       name: file.name.replace('.pdf',''),
       age: 0, gender: '미상', phone: '', email: '',
@@ -999,6 +1043,7 @@ async function processOnePDF(file, idx) {
       registeredAt: new Date().toLocaleDateString('ko-KR')
     });
   }
+}
 }
 
 function fileToBase64(file) {
@@ -1847,7 +1892,7 @@ JSON 형식으로 응답해주세요:
   }
 }
 
-// navigate에 email 페이지 추가
+// navigate에 email/upload 페이지 추가
 const _origNavigate = navigate;
 function navigate(page) {
   _origNavigate(page);
@@ -1855,7 +1900,13 @@ function navigate(page) {
     updateEmailRecipientList();
     loadEmailJSConfig();
   }
+  if (page === 'upload') {
+    loadGeminiKey();
+  }
 }
+
+// 초기 Gemini 키 로드
+loadGeminiKey();
 </script>
 </body>
 </html>
