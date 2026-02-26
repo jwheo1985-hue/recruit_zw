@@ -35,7 +35,7 @@ body{font-family:'Noto Sans KR',sans-serif;background:var(--bg);color:var(--tx);
 .page.active{display:block;}
 @keyframes fi{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
 
-/* DASHBOARD */
+/* DASHBOARD / CARDS / TABLE 등 스타일 동일... */
 .srow{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:22px;}
 .sc{background:var(--s1);border:1px solid var(--bd);border-radius:var(--r);padding:18px 20px;position:relative;overflow:hidden;}
 .sc::after{content:'';position:absolute;top:0;left:0;right:0;height:2px;}
@@ -68,7 +68,7 @@ tbody tr:hover td{background:rgba(255,255,255,.02);cursor:pointer;}
 .b-불합격{background:rgba(248,113,113,.15);color:var(--red);}
 .b-보류{background:rgba(139,149,176,.15);color:var(--mu);}
 
-/* FILTER */
+/* FILTER / BUTTONS / UPLOAD / AI STATUS / MODAL 등 스타일 동일... */
 .fbar{display:flex;gap:10px;margin-bottom:14px;flex-wrap:wrap;align-items:center;}
 .sw{flex:1;min-width:200px;position:relative;}
 .si{position:absolute;left:12px;top:50%;transform:translateY(-50%);color:var(--mu);pointer-events:none;}
@@ -82,114 +82,53 @@ textarea{resize:vertical;}
 .chip:hover{border-color:var(--blue);color:var(--tx);}
 .chip.active{background:rgba(79,159,255,.15);border-color:var(--blue);color:var(--blue);}
 
-/* BUTTONS */
 .btn{display:inline-flex;align-items:center;gap:6px;padding:9px 18px;border-radius:8px;border:none;cursor:pointer;font-size:13px;font-family:inherit;font-weight:600;transition:all .15s;white-space:nowrap;}
-.btn:disabled{opacity:.5;cursor:not-allowed;}
-.bp{background:var(--blue);color:#fff;}.bp:hover:not(:disabled){background:#3a8fee;}
-.bg{background:var(--s2);color:var(--tx);border:1px solid var(--bd);}.bg:hover:not(:disabled){border-color:var(--blue);color:var(--blue);}
-.bd-btn{background:rgba(248,113,113,.12);color:var(--red);border:1px solid rgba(248,113,113,.25);}.bd-btn:hover:not(:disabled){background:rgba(248,113,113,.22);}
-.bsm{padding:5px 12px;font-size:12px;border-radius:6px;}
-.bai{background:linear-gradient(135deg,#4f9fff22,#8b7cf822);color:var(--vio);border:1px solid rgba(139,124,248,.3);}.bai:hover:not(:disabled){background:linear-gradient(135deg,#4f9fff33,#8b7cf833);}
+.bp{background:var(--blue);color:#fff;}.bg{background:var(--s2);color:var(--tx);border:1px solid var(--bd);}.bd-btn{background:rgba(248,113,113,.12);color:var(--red);border:1px solid rgba(248,113,113,.25);}
 
-/* UPLOAD */
 .upz{border:2px dashed var(--bd2);border-radius:var(--r);padding:52px 32px;text-align:center;cursor:pointer;transition:all .2s;margin-bottom:20px;background:var(--s1);}
 .upz:hover,.upz.drag{border-color:var(--blue);background:rgba(79,159,255,.04);}
 .up-ico{font-size:46px;margin-bottom:14px;}
-.upz h3{font-size:15px;font-weight:600;margin-bottom:8px;}
-.upz p{font-size:12px;color:var(--mu);}
 
-/* AI 처리 상태 박스 */
 .ai-status{background:var(--s2);border:1px solid rgba(139,124,248,.3);border-radius:var(--r);padding:20px;margin-bottom:16px;}
 .ai-status-row{display:flex;align-items:center;gap:10px;margin-bottom:8px;}
-.ai-status-row:last-child{margin-bottom:0;}
 .step-dot{width:20px;height:20px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;flex-shrink:0;}
 .step-dot.done{background:rgba(52,211,153,.2);color:var(--grn);}
 .step-dot.ing{background:rgba(139,124,248,.2);color:var(--vio);}
 .step-dot.wait{background:var(--s3);color:var(--mu);}
-.step-txt{font-size:13px;}
-.step-txt.mu{color:var(--mu);}
 
-/* PARSED RESULT */
 .pcard{background:var(--s1);border:1px solid var(--bd);border-radius:var(--r);overflow:hidden;margin-bottom:14px;}
 .pgrd{display:grid;grid-template-columns:1fr 1fr;gap:14px;padding:20px;}
 .pf-l{font-size:11px;color:var(--mu);margin-bottom:4px;}
 .pf-v{font-size:14px;font-weight:600;}
-.pfull{grid-column:1/-1;}
 
 .aibox{background:var(--s2);border:1px solid rgba(139,124,248,.25);border-radius:var(--r);padding:20px;margin-top:14px;}
 .aibox-h{font-size:12px;color:var(--vio);font-family:'JetBrains Mono',monospace;letter-spacing:1px;margin-bottom:14px;}
 .aibox-c{font-size:13px;line-height:1.85;white-space:pre-wrap;}
 
-/* PIPELINE */
+/* PIPELINE / MODAL / DETAIL / TOAST... */
 .board{display:grid;grid-template-columns:repeat(5,1fr);gap:14px;align-items:start;}
 .bcol{background:var(--s1);border:1px solid var(--bd);border-radius:var(--r);overflow:hidden;}
 .bcol-h{padding:12px 14px;border-bottom:1px solid var(--bd);display:flex;align-items:center;gap:7px;font-size:12px;font-weight:600;}
-.bcol-cnt{margin-left:auto;font-family:'JetBrains Mono',monospace;font-size:11px;background:var(--s2);padding:2px 7px;border-radius:20px;color:var(--mu);}
 .bcol-b{padding:10px;display:flex;flex-direction:column;gap:8px;min-height:60px;}
-.bcard{background:var(--s2);border-radius:8px;padding:12px;cursor:pointer;border:1px solid var(--bd);transition:border-color .15s,transform .1s;}
-.bcard:hover{border-color:var(--bd2);transform:translateY(-1px);}
-.bcard-n{font-size:13px;font-weight:600;margin-bottom:3px;}
-.bcard-j{font-size:11px;color:var(--mu);}
-.bcard-s{font-size:10px;color:var(--mu);margin-top:5px;opacity:.7;}
+.bcard{background:var(--s2);border-radius:8px;padding:12px;cursor:pointer;border:1px solid var(--bd);}
 
-/* MODAL */
 .overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.65);z-index:999;align-items:center;justify-content:center;backdrop-filter:blur(2px);}
 .overlay.open{display:flex;}
-.modal{background:var(--s1);border:1px solid var(--bd2);border-radius:14px;width:580px;max-width:96vw;max-height:88vh;overflow-y:auto;padding:26px;scrollbar-width:thin;}
-.mlg{width:680px;}
-.mhd{display:flex;align-items:center;justify-content:space-between;margin-bottom:22px;}
-.mhd h2{font-size:15px;font-weight:700;}
-.mcl{background:none;border:none;color:var(--mu);font-size:22px;cursor:pointer;line-height:1;padding:2px 6px;border-radius:5px;}
-.mcl:hover{color:var(--tx);background:var(--s2);}
-.mft{display:flex;gap:10px;justify-content:flex-end;margin-top:22px;padding-top:18px;border-top:1px solid var(--bd);}
-.frow{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
-.fg{margin-bottom:14px;}
-.fg label{display:block;font-size:11px;color:var(--mu);margin-bottom:5px;}
-.fg input,.fg select,.fg textarea{width:100%;}
+.modal{background:var(--s1);border:1px solid var(--bd2);border-radius:14px;width:580px;max-width:96vw;max-height:88vh;overflow-y:auto;padding:26px;}
 
-/* DETAIL */
-.dsec{margin-bottom:18px;}
-.dsec-t{font-size:11px;color:var(--mu);letter-spacing:1px;text-transform:uppercase;margin-bottom:10px;padding-bottom:8px;border-bottom:1px solid var(--bd);}
-.dgrd{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
-.di-l{font-size:11px;color:var(--mu);margin-bottom:3px;}
-.di-v{font-size:13px;font-weight:500;}
-.dtxt{background:var(--s2);border-radius:8px;padding:14px;font-size:13px;line-height:1.75;white-space:pre-wrap;max-height:200px;overflow-y:auto;}
-.scbar{display:flex;gap:8px;align-items:center;margin-top:12px;}
-.scbar select{flex:1;}
-.hist{display:flex;flex-direction:column;}
-.hi{display:flex;gap:12px;padding:9px 0;border-bottom:1px solid var(--bd);font-size:12px;align-items:flex-start;}
-.hi:last-child{border-bottom:none;}
-.hidot{width:7px;height:7px;border-radius:50%;background:var(--blue);margin-top:4px;flex-shrink:0;}
-.hidate{color:var(--mu);font-family:'JetBrains Mono',monospace;font-size:11px;min-width:82px;}
-
-/* SETTINGS */
 .sset{background:var(--s1);border:1px solid var(--bd);border-radius:var(--r);padding:22px;margin-bottom:16px;max-width:640px;}
-.sset h3{font-size:13px;font-weight:600;margin-bottom:4px;}
-.sset p{font-size:12px;color:var(--mu);margin-bottom:16px;}
 
-/* UTILS */
-.flex{display:flex;}.aic{align-items:center;}.g2{gap:8px;}.g3{gap:12px;}
-.mt3{margin-top:12px;}.mt4{margin-top:16px;}.mb3{margin-bottom:12px;}.mb4{margin-bottom:16px;}
-.mu-c{color:var(--mu);}.tsm{font-size:12px;}
-.empty{text-align:center;padding:48px 20px;color:var(--mu);}
-.empty-i{font-size:36px;margin-bottom:10px;}.empty-t{font-size:13px;}
-
-/* TOAST */
 #toast{position:fixed;bottom:22px;right:22px;background:var(--s2);border:1px solid var(--bd2);border-radius:10px;padding:12px 18px;font-size:13px;z-index:9999;pointer-events:none;transform:translateY(80px);opacity:0;transition:all .28s cubic-bezier(.34,1.56,.64,1);}
 #toast.show{transform:translateY(0);opacity:1;}
 #toast.ok{border-color:var(--grn);}
 #toast.err{border-color:var(--red);}
-.spin{display:inline-block;width:14px;height:14px;border:2px solid rgba(139,124,248,.3);border-top-color:var(--vio);border-radius:50%;animation:sp .65s linear infinite;}
-@keyframes sp{to{transform:rotate(360deg)}}
 
-/* API KEY 없을 때 경고 */
 .api-warn{background:rgba(251,191,36,.08);border:1px solid rgba(251,191,36,.3);border-radius:10px;padding:14px 18px;margin-bottom:20px;font-size:13px;color:var(--yel);display:none;}
 .api-warn a{color:var(--blue);cursor:pointer;text-decoration:underline;}
 </style>
 </head>
 <body>
 
-<!-- SIDEBAR -->
 <nav id="sb">
   <div class="logo">
     <div class="logo-t">RECRUIT AI</div>
@@ -205,7 +144,6 @@ textarea{resize:vertical;}
   <div class="sbfoot">데이터는 브라우저에 저장됩니다</div>
 </nav>
 
-<!-- MAIN -->
 <div id="main">
   <div id="topbar">
     <div id="ptitle">대시보드</div>
@@ -214,7 +152,6 @@ textarea{resize:vertical;}
   </div>
   <div id="content">
 
-    <!-- DASHBOARD -->
     <div class="page active" id="page-dashboard">
       <div class="srow">
         <div class="sc b"><div class="sc-l">전체 지원자</div><div class="sc-v" id="s-total">0</div><div class="sc-s">누적 등록</div></div>
@@ -238,7 +175,6 @@ textarea{resize:vertical;}
       </div>
     </div>
 
-    <!-- APPLICANTS -->
     <div class="page" id="page-applicants">
       <div class="fbar">
         <div class="sw"><span class="si">🔍</span><input type="text" id="qs" placeholder="이름, 직무, 메모 검색..."></div>
@@ -252,7 +188,6 @@ textarea{resize:vertical;}
         <div class="chip" data-st="2차면접">🎯 2차면접</div>
         <div class="chip" data-st="최종합격">✅ 최종합격</div>
         <div class="chip" data-st="불합격">❌ 불합격</div>
-        <div class="chip" data-st="보류">⏸ 보류</div>
       </div>
       <div class="card">
         <div class="card-hd"><span class="card-t">지원자 목록</span><span class="mu-c tsm" id="lcnt"></span></div>
@@ -260,138 +195,82 @@ textarea{resize:vertical;}
       </div>
     </div>
 
-    <!-- UPLOAD -->
     <div class="page" id="page-upload">
       <div class="api-warn" id="api-warn">
         ⚠️ Gemini API Key가 설정되지 않았습니다. <a onclick="goPage('settings')">설정에서 입력</a>하면 AI가 PDF를 자동으로 읽고 정보를 추출합니다.
       </div>
-
       <div class="upz" id="upz">
         <div class="up-ico">📄</div>
         <h3>이력서를 드래그하거나 클릭해서 업로드</h3>
-        <p style="margin-top:6px">PDF · HTML · TXT 파일 지원</p>
-        <p style="margin-top:4px">✨ PDF는 Gemini AI가 직접 읽어서 정보를 자동 추출합니다</p>
+        <p>PDF · HTML · TXT 파일 지원</p>
         <input type="file" id="fi" accept=".pdf,.html,.htm,.txt" style="display:none">
       </div>
-
-      <!-- AI 처리 진행 상태 -->
       <div id="ai-progress" style="display:none">
-        <div class="ai-status mb4">
-          <div class="ai-status-row">
-            <div class="step-dot" id="step1-dot">1</div>
-            <div class="step-txt" id="step1-txt">파일 읽기</div>
-          </div>
-          <div class="ai-status-row">
-            <div class="step-dot" id="step2-dot">2</div>
-            <div class="step-txt" id="step2-txt">Gemini AI 분석 중...</div>
-          </div>
-          <div class="ai-status-row">
-            <div class="step-dot" id="step3-dot">3</div>
-            <div class="step-txt" id="step3-txt">정보 추출 완료</div>
-          </div>
+        <div class="ai-status">
+          <div class="ai-status-row"><div class="step-dot" id="step1-dot">1</div><div class="step-txt" id="step1-txt">파일 읽기</div></div>
+          <div class="ai-status-row"><div class="step-dot" id="step2-dot">2</div><div class="step-txt" id="step2-txt">AI 분석 중...</div></div>
+          <div class="ai-status-row"><div class="step-dot" id="step3-dot">3</div><div class="step-txt" id="step3-txt">완료 대기</div></div>
         </div>
       </div>
-
-      <!-- 파싱 결과 -->
       <div id="upres" style="display:none">
-        <div class="pcard">
-          <div class="card-hd"><span class="card-t">추출된 지원자 정보</span><span class="mu-c tsm" id="upfn"></span></div>
-          <div class="pgrd" id="pgrd"></div>
-        </div>
-
-        <div id="airesbox" style="display:none">
-          <div class="aibox">
-            <div class="aibox-h">✦ AI 분석 요약</div>
-            <div class="aibox-c" id="aitext"></div>
-          </div>
-        </div>
-
-        <div class="flex g2 mt4" style="flex-wrap:wrap">
+        <div class="pcard"><div class="pgrd" id="pgrd"></div></div>
+        <div class="flex g2 mt4">
           <button class="btn bp" onclick="saveFromUpload()">💾 지원자로 저장</button>
-          <button class="btn bg" onclick="openEditBeforeSave()">✏️ 정보 수정 후 저장</button>
           <button class="btn bg" onclick="resetUpload()">🔄 초기화</button>
         </div>
       </div>
     </div>
 
-    <!-- PIPELINE -->
-    <div class="page" id="page-pipeline">
-      <div class="board" id="board"></div>
-    </div>
+    <div class="page" id="page-pipeline"><div class="board" id="board"></div></div>
 
-    <!-- SETTINGS -->
     <div class="page" id="page-settings">
       <div class="sset">
         <h3>🤖 Gemini API 설정</h3>
-        <p>PDF 이력서를 AI가 직접 읽어서 이름, 연락처, 경력 등을 자동 추출합니다.<br>
-        <a href="https://aistudio.google.com/app/apikey" target="_blank" style="color:var(--blue)">Google AI Studio</a>에서 무료로 발급 가능합니다.</p>
-        <div class="fg"><label>API Key</label><input type="password" id="cak" placeholder="AIza..."></div>
-        <div class="fg"><label>모델 (이력서 이미지 읽기 지원 모델)</label>
+        <p>Google AI Studio에서 발급받은 키를 입력하세요.</p>
+        <div class="fg"><label>API Key</label><input type="password" id="cak"></div>
+        <div class="fg"><label>모델</label>
           <select id="cmod">
-            <option value="gemini-1.5-flash">gemini-1.5-flash (빠름 · 무료 · 추천)</option>
-            <option value="gemini-2.0-flash">gemini-2.0-flash (최신 · 빠름)</option>
-            <option value="gemini-1.5-pro">gemini-1.5-pro (정확 · 유료)</option>
+            <option value="gemini-1.5-flash">gemini-1.5-flash (추천)</option>
+            <option value="gemini-2.0-flash-exp">gemini-2.0-flash (최신)</option>
+            <option value="gemini-1.5-pro">gemini-1.5-pro (고성능)</option>
           </select>
         </div>
         <button class="btn bp" onclick="saveCfg()">저장</button>
       </div>
       <div class="sset">
         <h3>💾 데이터 관리</h3>
-        <p>전체 데이터를 JSON 파일로 백업하거나 복원할 수 있습니다.</p>
-        <div class="flex g2" style="flex-wrap:wrap">
-          <button class="btn bg" onclick="exportJSON()">📤 JSON 내보내기</button>
-          <button class="btn bg" onclick="document.getElementById('impf').click()">📥 JSON 가져오기</button>
-          <button class="btn bd-btn" onclick="clearAll()">🗑️ 전체 초기화</button>
-        </div>
-        <input type="file" id="impf" accept=".json" style="display:none" onchange="importJSON(event)">
-      </div>
-      <div class="sset">
-        <h3>📋 채용 단계</h3>
-        <p>현재 설정된 채용 단계 순서입니다.</p>
-        <div class="flex g2" style="flex-wrap:wrap;align-items:center">
-          <span class="badge b-서류검토">📋 서류검토</span><span class="mu-c">→</span>
-          <span class="badge b-1차면접">🎤 1차면접</span><span class="mu-c">→</span>
-          <span class="badge b-2차면접">🎯 2차면접</span><span class="mu-c">→</span>
-          <span class="badge b-최종합격">✅ 최종합격</span><span class="mu-c">/</span>
-          <span class="badge b-불합격">❌ 불합격</span>
-        </div>
+        <button class="btn bg" onclick="exportJSON()">📤 JSON 내보내기</button>
+        <button class="btn bd-btn" onclick="clearAll()">🗑️ 전체 초기화</button>
       </div>
     </div>
 
-  </div><!-- /content -->
-</div><!-- /main -->
+  </div>
+</div>
 
-<!-- MODAL ADD/EDIT -->
 <div class="overlay" id="modal-add">
   <div class="modal">
     <div class="mhd"><h2 id="add-ttl">지원자 추가</h2><button class="mcl" onclick="closeModal('modal-add')">×</button></div>
     <input type="hidden" id="eid">
     <div class="frow">
-      <div class="fg"><label>이름 *</label><input type="text" id="fn" placeholder="홍길동"></div>
-      <div class="fg"><label>연락처</label><input type="text" id="fph" placeholder="010-0000-0000"></div>
-      <div class="fg"><label>이메일</label><input type="email" id="fem" placeholder="email@example.com"></div>
-      <div class="fg"><label>지원 직무</label><input type="text" id="fj" placeholder="영업팀장, 개발자 등"></div>
-      <div class="fg"><label>출처</label>
-        <select id="fsrc"><option>직접입력</option><option>사람인</option><option>잡코리아</option><option>PDF이력서</option></select>
-      </div>
-      <div class="fg"><label>채용 단계</label>
-        <select id="fst"><option>서류검토</option><option>1차면접</option><option>2차면접</option><option>최종합격</option><option>불합격</option><option>보류</option></select>
-      </div>
+      <div class="fg"><label>이름 *</label><input type="text" id="fn"></div>
+      <div class="fg"><label>연락처</label><input type="text" id="fph"></div>
+      <div class="fg"><label>이메일</label><input type="text" id="fem"></div>
+      <div class="fg"><label>지원 직무</label><input type="text" id="fj"></div>
+      <div class="fg"><label>출처</label><select id="fsrc"><option>직접입력</option><option>사람인</option><option>잡코리아</option><option>PDF이력서</option></select></div>
+      <div class="fg"><label>채용 단계</label><select id="fst"><option>서류검토</option><option>1차면접</option><option>2차면접</option><option>최종합격</option><option>불합격</option></select></div>
     </div>
-    <div class="fg"><label>경력 / 학력 / AI 요약</label><textarea id="fca" rows="5" placeholder="경력, 학력, AI 분석 결과..."></textarea></div>
-    <div class="fg"><label>메모</label><textarea id="fmo" rows="3" placeholder="면접 피드백, 특이사항..."></textarea></div>
-    <div class="mft"><button class="btn bg" onclick="closeModal('modal-add')">취소</button><button class="btn bp" onclick="saveApplicant()">저장</button></div>
+    <div class="fg"><label>경력 요약</label><textarea id="fca" rows="5"></textarea></div>
+    <div class="fg"><label>메모</label><textarea id="fmo" rows="3"></textarea></div>
+    <div class="mft"><button class="btn bp" onclick="saveApplicant()">저장</button></div>
   </div>
 </div>
 
-<!-- MODAL DETAIL -->
 <div class="overlay" id="modal-det">
-  <div class="modal mlg">
+  <div class="modal">
     <div class="mhd"><h2 id="det-name">상세</h2><button class="mcl" onclick="closeModal('modal-det')">×</button></div>
     <div id="det-body"></div>
     <div class="mft">
       <button class="btn bd-btn bsm" id="det-del">🗑️ 삭제</button>
-      <button class="btn bg" onclick="closeModal('modal-det')">닫기</button>
       <button class="btn bp" id="det-edit">✏️ 수정</button>
     </div>
   </div>
@@ -401,11 +280,9 @@ textarea{resize:vertical;}
 
 <script>
 /* ═══ STATE ═══ */
-let DB  = JSON.parse(localStorage.getItem('rma4') || '[]');
+let DB = JSON.parse(localStorage.getItem('rma4') || '[]');
 let CFG = JSON.parse(localStorage.getItem('rma4c') || '{"ak":"","m":"gemini-1.5-flash"}');
-let upData  = null;  // 업로드된 파싱 결과
-let detId   = null;
-let stFilt  = '';
+let upData = null; let detId = null; let stFilt = '';
 
 /* ═══ PERSIST ═══ */
 function save(){
@@ -418,484 +295,151 @@ document.querySelectorAll('.ni[data-pg]').forEach(el => {
   el.addEventListener('click', function(){ goPage(this.dataset.pg); });
 });
 
-const TITLES = { dashboard:'대시보드', applicants:'지원자 목록', upload:'이력서 업로드', pipeline:'채용 파이프라인', settings:'설정' };
-
 function goPage(pg){
   document.querySelectorAll('.ni').forEach(n => n.classList.remove('active'));
   const nav = document.querySelector('.ni[data-pg="'+pg+'"]');
   if(nav) nav.classList.add('active');
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
   document.getElementById('page-'+pg).classList.add('active');
-  document.getElementById('ptitle').textContent = TITLES[pg] || pg;
-
+  document.getElementById('ptitle').textContent = pg.toUpperCase();
   if(pg==='dashboard') renderDash();
-  if(pg==='applicants'){ fillJobFilter(); renderList(); }
+  if(pg==='applicants') renderList();
   if(pg==='pipeline') renderPipe();
-  if(pg==='upload'){
-    document.getElementById('api-warn').style.display = CFG.ak ? 'none' : 'block';
-  }
+  if(pg==='upload') document.getElementById('api-warn').style.display = CFG.ak ? 'none' : 'block';
 }
 
 /* ═══ HELPERS ═══ */
-const uid    = () => Date.now().toString(36)+Math.random().toString(36).slice(2,5);
-const todayS = () => new Date().toLocaleDateString('ko-KR');
-const fmtD   = ts => new Date(ts).toLocaleDateString('ko-KR');
+const uid = () => Date.now().toString(36)+Math.random().toString(36).slice(2,5);
+const fmtD = ts => new Date(ts).toLocaleDateString('ko-KR');
+function badge(s){ return `<span class="badge b-${s}">${s}</span>`; }
 
-function badge(s){
-  const e = {'서류검토':'📋','1차면접':'🎤','2차면접':'🎯','최종합격':'✅','불합격':'❌','보류':'⏸'}[s]||'';
-  return `<span class="badge b-${s}">${e} ${s}</span>`;
-}
-
-/* ═══ DASHBOARD ═══ */
+/* ═══ DASHBOARD / LIST / PIPELINE ═══ */
 function renderDash(){
-  const total = DB.length;
-  const pass  = DB.filter(a=>a.stage==='최종합격').length;
-  const fail  = DB.filter(a=>a.stage==='불합격').length;
-  document.getElementById('s-total').textContent  = total;
-  document.getElementById('s-active').textContent = total-pass-fail;
-  document.getElementById('s-pass').textContent   = pass;
-  document.getElementById('s-fail').textContent   = fail;
-  document.getElementById('s-rate').textContent   = total ? Math.round(pass/total*100) : 0;
-
-  ['서류검토','1차면접','2차면접','최종합격','불합격'].forEach((s,i)=>{
-    const el=document.getElementById('ps'+i); if(el) el.textContent=DB.filter(a=>a.stage===s).length;
-  });
-
-  const recent=[...DB].sort((a,b)=>b.ts-a.ts).slice(0,6);
-  const tb=document.getElementById('dash-tb');
-  tb.innerHTML = recent.length ? recent.map(a=>`
-    <tr onclick="openDetail('${a.id}')">
-      <td><strong>${a.name}</strong></td>
-      <td>${a.job||'-'}</td><td>${a.source||'-'}</td>
-      <td>${badge(a.stage)}</td>
-      <td class="mu-c tsm">${fmtD(a.ts)}</td>
-    </tr>`).join('') :
-    `<tr><td colspan="5"><div class="empty"><div class="empty-i">📭</div><div class="empty-t">등록된 지원자가 없습니다</div></div></td></tr>`;
-  document.getElementById('nc').textContent = DB.length;
-}
-
-/* ═══ LIST ═══ */
-function fillJobFilter(){
-  const jobs=[...new Set(DB.map(a=>a.job).filter(Boolean))];
-  document.getElementById('qjob').innerHTML='<option value="">전체 직무</option>'+jobs.map(j=>`<option>${j}</option>`).join('');
+  document.getElementById('s-total').textContent = DB.length;
+  const recent = [...DB].sort((a,b)=>b.ts-a.ts).slice(0,5);
+  document.getElementById('dash-tb').innerHTML = recent.map(a=>`<tr onclick="openDetail('${a.id}')"><td>${a.name}</td><td>${a.job}</td><td>${a.source}</td><td>${badge(a.stage)}</td><td>${fmtD(a.ts)}</td></tr>`).join('');
 }
 
 function renderList(){
-  const q=document.getElementById('qs').value.toLowerCase();
-  const src=document.getElementById('qsrc').value;
-  const job=document.getElementById('qjob').value;
-  let list=[...DB];
-  if(q) list=list.filter(a=>a.name.toLowerCase().includes(q)||(a.job||'').toLowerCase().includes(q)||(a.memo||'').toLowerCase().includes(q)||(a.career||'').toLowerCase().includes(q));
-  if(src) list=list.filter(a=>a.source===src);
-  if(job) list=list.filter(a=>a.job===job);
-  if(stFilt) list=list.filter(a=>a.stage===stFilt);
-  list.sort((a,b)=>b.ts-a.ts);
-  document.getElementById('lcnt').textContent=list.length+'명';
-  const tb=document.getElementById('list-tb');
-  tb.innerHTML=list.length?list.map(a=>`
-    <tr>
-      <td><strong style="cursor:pointer;color:var(--blue)" onclick="openDetail('${a.id}')">${a.name}</strong></td>
-      <td class="mu-c">${a.phone||'-'}</td>
-      <td>${a.job||'-'}</td><td>${a.source||'-'}</td>
-      <td>${badge(a.stage)}</td>
-      <td class="mu-c tsm">${fmtD(a.ts)}</td>
-      <td><div class="flex g2">
-        <button class="btn bg bsm" onclick="openEdit('${a.id}')">수정</button>
-        <button class="btn bd-btn bsm" onclick="delApp('${a.id}')">삭제</button>
-      </div></td>
-    </tr>`).join(''):
-    `<tr><td colspan="7"><div class="empty"><div class="empty-i">🔍</div><div class="empty-t">조건에 맞는 지원자가 없습니다</div></div></td></tr>`;
+  const q = document.getElementById('qs').value.toLowerCase();
+  let list = DB.filter(a => a.name.toLowerCase().includes(q) || a.job.toLowerCase().includes(q));
+  if(stFilt) list = list.filter(a => a.stage === stFilt);
+  document.getElementById('list-tb').innerHTML = list.map(a => `<tr><td>${a.name}</td><td>${a.phone}</td><td>${a.job}</td><td>${a.source}</td><td>${badge(a.stage)}</td><td>${fmtD(a.ts)}</td><td><button onclick="openEdit('${a.id}')">수정</button></td></tr>`).join('');
 }
 
-document.getElementById('qs').addEventListener('input', renderList);
-document.getElementById('qsrc').addEventListener('change', renderList);
-document.getElementById('qjob').addEventListener('change', renderList);
-document.querySelectorAll('#chips .chip').forEach(c=>{
-  c.addEventListener('click', function(){
-    document.querySelectorAll('#chips .chip').forEach(x=>x.classList.remove('active'));
-    this.classList.add('active'); stFilt=this.dataset.st; renderList();
-  });
-});
-
-/* ═══ PIPELINE ═══ */
 function renderPipe(){
-  const STAGES=[
-    {k:'서류검토',c:'var(--blue)',e:'📋'},{k:'1차면접',c:'var(--vio)',e:'🎤'},
-    {k:'2차면접',c:'var(--yel)',e:'🎯'},{k:'최종합격',c:'var(--grn)',e:'✅'},
-    {k:'불합격',c:'var(--red)',e:'❌'},
-  ];
-  document.getElementById('board').innerHTML=STAGES.map(s=>{
-    const cards=DB.filter(a=>a.stage===s.k);
-    return `<div class="bcol">
-      <div class="bcol-h" style="color:${s.c}">${s.e} ${s.k}<span class="bcol-cnt">${cards.length}</span></div>
-      <div class="bcol-b">${cards.length?cards.map(a=>`
-        <div class="bcard" onclick="openDetail('${a.id}')">
-          <div class="bcard-n">${a.name}</div>
-          <div class="bcard-j">${a.job||'-'}</div>
-          <div class="bcard-s">${a.source||''}</div>
-        </div>`).join(''):'<div class="mu-c tsm" style="text-align:center;padding:16px">없음</div>'}
-      </div></div>`;
+  const STAGES = ['서류검토','1차면접','2차면접','최종합격','불합격'];
+  document.getElementById('board').innerHTML = STAGES.map(s => {
+    const cards = DB.filter(a => a.stage === s);
+    return `<div class="bcol"><div class="bcol-h">${s} (${cards.length})</div><div class="bcol-b">${cards.map(a=>`<div class="bcard" onclick="openDetail('${a.id}')">${a.name}<br><small>${a.job}</small></div>`).join('')}</div></div>`;
   }).join('');
 }
 
-/* ═══ ADD / EDIT ═══ */
+/* ═══ MODAL CONTROL ═══ */
+function openModal(id){ document.getElementById(id).classList.add('open'); }
+function closeModal(id){ document.getElementById(id).classList.remove('open'); }
+
 function openAddModal(){
-  document.getElementById('add-ttl').textContent='지원자 추가';
-  document.getElementById('eid').value='';
+  document.getElementById('eid').value = '';
   ['fn','fph','fem','fj','fca','fmo'].forEach(id=>document.getElementById(id).value='');
-  document.getElementById('fsrc').value='직접입력';
-  document.getElementById('fst').value='서류검토';
   openModal('modal-add');
 }
 
 function openEdit(id){
-  const a=DB.find(x=>x.id===id); if(!a) return;
-  closeModal('modal-det');
-  document.getElementById('add-ttl').textContent='지원자 수정';
-  document.getElementById('eid').value=id;
-  document.getElementById('fn').value=a.name||'';
-  document.getElementById('fph').value=a.phone||'';
-  document.getElementById('fem').value=a.email||'';
-  document.getElementById('fj').value=a.job||'';
-  document.getElementById('fsrc').value=a.source||'직접입력';
-  document.getElementById('fst').value=a.stage||'서류검토';
-  document.getElementById('fca').value=a.career||'';
-  document.getElementById('fmo').value=a.memo||'';
-  openModal('modal-add');
-}
-
-// 업로드 후 수정해서 저장
-function openEditBeforeSave(){
-  if(!upData) return;
-  document.getElementById('add-ttl').textContent='지원자 정보 확인 · 수정';
-  document.getElementById('eid').value='';
-  document.getElementById('fn').value=upData.name||'';
-  document.getElementById('fph').value=upData.phone||'';
-  document.getElementById('fem').value=upData.email||'';
-  document.getElementById('fj').value=upData.job||'';
-  document.getElementById('fsrc').value=upData.source||'PDF이력서';
-  document.getElementById('fst').value='서류검토';
-  document.getElementById('fca').value=upData.career||'';
-  document.getElementById('fmo').value='';
+  const a = DB.find(x=>x.id===id); if(!a) return;
+  document.getElementById('eid').value = id;
+  document.getElementById('fn').value = a.name;
+  document.getElementById('fph').value = a.phone;
+  document.getElementById('fj').value = a.job;
+  document.getElementById('fst').value = a.stage;
+  document.getElementById('fca').value = a.career;
   openModal('modal-add');
 }
 
 function saveApplicant(){
-  const name=document.getElementById('fn').value.trim();
-  if(!name){ toast('이름을 입력해주세요','err'); return; }
-  const id=document.getElementById('eid').value;
-  const nst=document.getElementById('fst').value;
-  const d={
-    name, job:document.getElementById('fj').value.trim(),
-    phone:document.getElementById('fph').value.trim(),
-    email:document.getElementById('fem').value.trim(),
-    source:document.getElementById('fsrc').value, stage:nst,
-    career:document.getElementById('fca').value.trim(),
-    memo:document.getElementById('fmo').value.trim(),
+  const id = document.getElementById('eid').value;
+  const data = {
+    id: id || uid(), ts: Date.now(),
+    name: document.getElementById('fn').value,
+    phone: document.getElementById('fph').value,
+    email: document.getElementById('fem').value,
+    job: document.getElementById('fj').value,
+    source: document.getElementById('fsrc').value,
+    stage: document.getElementById('fst').value,
+    career: document.getElementById('fca').value,
+    memo: document.getElementById('fmo').value,
   };
-  if(id){
-    const idx=DB.findIndex(a=>a.id===id); const old=DB[idx];
-    const hist=old.history||[];
-    if(old.stage!==nst) hist.push({date:todayS(),msg:`단계 변경: ${old.stage} → ${nst}`});
-    hist.push({date:todayS(),msg:'정보 수정'});
-    d.id=id; d.ts=old.ts; d.history=hist; DB[idx]=d; toast('수정 완료!','ok');
-  } else {
-    d.id=uid(); d.ts=Date.now();
-    d.history=[{date:todayS(),msg:'지원자 등록'+(upData?` (${upData.source} 업로드)`:'')}];
-    DB.push(d); toast('저장 완료!','ok');
-    upData=null; // 업로드 데이터 초기화
-  }
-  save(); closeModal('modal-add'); renderDash();
-  if(document.getElementById('page-applicants').classList.contains('active')) renderList();
+  if(id){ const idx=DB.findIndex(x=>x.id===id); DB[idx]=data; } else { DB.push(data); }
+  save(); closeModal('modal-add'); renderDash(); renderList();
+  toast('저장되었습니다', 'ok');
 }
 
-/* ═══ DETAIL ═══ */
-function openDetail(id){
-  const a=DB.find(x=>x.id===id); if(!a) return;
-  detId=id;
-  document.getElementById('det-name').textContent=a.name;
-  document.getElementById('det-body').innerHTML=`
-    <div class="dsec">
-      <div class="dsec-t">기본 정보</div>
-      <div class="dgrd">
-        <div><div class="di-l">지원 직무</div><div class="di-v">${a.job||'-'}</div></div>
-        <div><div class="di-l">채용 단계</div><div class="di-v">${badge(a.stage)}</div></div>
-        <div><div class="di-l">연락처</div><div class="di-v">${a.phone||'-'}</div></div>
-        <div><div class="di-l">이메일</div><div class="di-v">${a.email||'-'}</div></div>
-        <div><div class="di-l">출처</div><div class="di-v">${a.source||'-'}</div></div>
-        <div><div class="di-l">등록일</div><div class="di-v">${fmtD(a.ts)}</div></div>
-      </div>
-      <div class="scbar mt3">
-        <span class="mu-c tsm">단계 변경:</span>
-        <select id="dstsel"><option>서류검토</option><option>1차면접</option><option>2차면접</option><option>최종합격</option><option>불합격</option><option>보류</option></select>
-        <button class="btn bg bsm" onclick="changeSt()">변경</button>
-      </div>
-    </div>
-    ${a.career?`<div class="dsec"><div class="dsec-t">경력 / AI 요약</div><div class="dtxt">${a.career}</div></div>`:''}
-    ${a.memo?`<div class="dsec"><div class="dsec-t">메모</div><div class="dtxt">${a.memo}</div></div>`:''}
-    <div class="dsec">
-      <div class="dsec-t">진행 히스토리</div>
-      <div class="hist">${(a.history||[]).slice().reverse().map(h=>`
-        <div class="hi"><div class="hidot"></div><div class="hidate">${h.date}</div><div>${h.msg}</div></div>`).join('')||'<div class="mu-c tsm">기록 없음</div>'}
-      </div>
-    </div>`;
-  setTimeout(()=>{ const s=document.getElementById('dstsel'); if(s) s.value=a.stage; },10);
-  document.getElementById('det-edit').onclick=()=>openEdit(id);
-  document.getElementById('det-del').onclick=()=>delApp(id);
-  openModal('modal-det');
-}
-
-function changeSt(){
-  const sel=document.getElementById('dstsel'); if(!sel||!detId) return;
-  const ns=sel.value;
-  const idx=DB.findIndex(a=>a.id===detId); if(idx<0) return;
-  const old=DB[idx];
-  if(old.stage===ns){ toast('이미 같은 단계입니다',''); return; }
-  old.history=old.history||[];
-  old.history.push({date:todayS(),msg:`단계 변경: ${old.stage} → ${ns}`});
-  old.stage=ns;
-  save(); closeModal('modal-det'); openDetail(detId); renderDash();
-  toast(ns+'(으)로 변경되었습니다','ok');
-}
-
-function delApp(id){
-  if(!confirm('삭제하시겠습니까?')) return;
-  DB=DB.filter(a=>a.id!==id); save(); closeModal('modal-det'); renderDash();
-  if(document.getElementById('page-applicants').classList.contains('active')) renderList();
-  toast('삭제 완료','ok');
-}
-
-/* ═══ UPLOAD (Gemini Vision) ═══ */
-const upz=document.getElementById('upz');
-const fi=document.getElementById('fi');
-upz.addEventListener('click',()=>fi.click());
-fi.addEventListener('change',e=>{ if(e.target.files[0]) handleFile(e.target.files[0]); });
-upz.addEventListener('dragover',e=>{ e.preventDefault(); upz.classList.add('drag'); });
-upz.addEventListener('dragleave',()=>upz.classList.remove('drag'));
-upz.addEventListener('drop',e=>{ e.preventDefault(); upz.classList.remove('drag'); if(e.dataTransfer.files[0]) handleFile(e.dataTransfer.files[0]); });
-
-function setStep(n, state, txt){
-  const dot=document.getElementById('step'+n+'-dot');
-  const t=document.getElementById('step'+n+'-txt');
-  dot.className='step-dot '+state;
-  dot.textContent = state==='done'?'✓':state==='ing'?'⟳':n;
-  if(txt){ t.textContent=txt; t.className='step-txt'+(state==='wait'?' mu':''); }
-}
+/* ═══ AI UPLOAD (V1 최신버전 적용) ═══ */
+const fi = document.getElementById('fi');
+document.getElementById('upz').onclick = () => fi.click();
+fi.onchange = e => { if(e.target.files[0]) handleFile(e.target.files[0]); };
 
 async function handleFile(file){
-  document.getElementById('upfn').textContent=file.name;
-  document.getElementById('upres').style.display='none';
-  document.getElementById('ai-progress').style.display='block';
-  setStep(1,'ing','파일 읽는 중...');
-  setStep(2,'wait','AI 분석 대기');
-  setStep(3,'wait','완료 대기');
-
-  // 파일 → base64
+  document.getElementById('ai-progress').style.display = 'block';
+  setStep(1,'ing');
   const b64 = await fileToBase64(file);
-  const mime = file.name.endsWith('.pdf') ? 'application/pdf' : file.type || 'text/plain';
-  setStep(1,'done','파일 읽기 완료');
-
-  // API 키 없으면 기본 파싱만
-  if(!CFG.ak){
-    setStep(2,'wait','API Key 없음 (기본 파싱 사용)');
-    setStep(3,'ing','텍스트 추출 중...');
-    let text='';
-    try{ text = atob(b64); } catch(e){ text=''; }
-    const parsed = parseTextBasic(text, file.name);
-    upData={...parsed, career:''};
+  setStep(1,'done'); setStep(2,'ing');
+  try {
+    const res = await callGeminiVision(b64, file.type || 'application/pdf');
+    const parsed = JSON.parse(res.replace(/```json|```/g, ''));
+    upData = { name: parsed.이름, phone: parsed.연락처, job: parsed.지원직무, career: parsed.경력요약, source: 'PDF이력서' };
     showParsedResult(upData);
-    setStep(3,'done','기본 파싱 완료 (AI 분석 없음)');
-    toast('API Key를 설정하면 더 정확하게 읽습니다','');
-    return;
-  }
-
-  setStep(2,'ing','Gemini AI가 이력서 분석 중...');
-
-  try{
-    const result = await callGeminiVision(b64, mime);
-    setStep(2,'done','AI 분석 완료');
-    setStep(3,'ing','정보 정리 중...');
-
-    // JSON 파싱 시도
-    let parsed;
-    try{
-      const jsonStr = result.replace(/```json\n?/g,'').replace(/```\n?/g,'').trim();
-      parsed = JSON.parse(jsonStr);
-    } catch(e){
-      // JSON 실패 시 텍스트에서 추출
-      parsed = extractFromText(result);
-      parsed.career = result;
-    }
-
-    upData = {
-      name:   parsed.이름||parsed.name||'',
-      phone:  parsed.연락처||parsed.phone||'',
-      email:  parsed.이메일||parsed.email||'',
-      job:    parsed.지원직무||parsed.job||'',
-      source: 'PDF이력서',
-      career: parsed.경력요약||parsed.career||result,
-      aiSummary: parsed.AI요약||parsed.summary||result,
-    };
-
-    showParsedResult(upData);
-    setStep(3,'done','추출 완료');
-    toast('AI 분석 완료!','ok');
-
-  } catch(e){
-    setStep(2,'wait','AI 오류: '+e.message);
-    toast('AI 오류: '+e.message,'err');
+    setStep(2,'done'); setStep(3,'done');
+  } catch(e) {
+    toast('AI 분석 실패: ' + e.message, 'err');
   }
 }
 
 async function callGeminiVision(b64, mime){
-  // 모델 명칭을 v1 버전에 맞게 수정 (앞에 models/ 를 명시적으로 붙여줍니다)
-  const modelId = CFG.m || 'gemini-1.5-flash';
-  const fullModelName = modelId.startsWith('models/') ? modelId : `models/${modelId}`;
-
-  const prompt = `이 이력서 문서를 분석하고 다음 정보를 JSON 형식으로만 답해주세요... (중략)`;
-
-  // v1beta 대신 v1 엔드포인트를 사용하세요
-  const resp = await fetch(
-    `https://generativelanguage.googleapis.com/v1/${fullModelName}:generateContent?key=${CFG.ak}`,
-    {
-      method:'POST', 
-      headers:{'Content-Type':'application/json'},
-      body: JSON.stringify({
-        contents:[{
-          parts:[
-            { inline_data:{ mime_type: mime, data: b64 } },
-            { text: prompt }
-          ]
-        }]
-      })
-    }
-  );
-function showParsedResult(d){
-  document.getElementById('pgrd').innerHTML=`
-    <div><div class="pf-l">이름</div><div class="pf-v" style="color:var(--blue)">${d.name||'미감지'}</div></div>
-    <div><div class="pf-l">연락처</div><div class="pf-v">${d.phone||'미감지'}</div></div>
-    <div><div class="pf-l">이메일</div><div class="pf-v">${d.email||'미감지'}</div></div>
-    <div><div class="pf-l">지원 직무</div><div class="pf-v">${d.job||'미감지'}</div></div>
-    <div><div class="pf-l">출처</div><div class="pf-v">${d.source||'-'}</div></div>
-    ${d.aiSummary?`<div class="pfull">
-      <div class="aibox mt3"><div class="aibox-h">✦ AI 분석 요약</div><div class="aibox-c">${d.aiSummary}</div></div>
-    </div>`:''}
-  `;
-  document.getElementById('upres').style.display='block';
-}
-
-// Base64 변환
-function fileToBase64(file){
-  return new Promise((res,rej)=>{
-    const r=new FileReader();
-    r.onload=e=>res(e.target.result.split(',')[1]);
-    r.onerror=rej;
-    r.readAsDataURL(file);
+  let modelId = CFG.m || 'gemini-1.5-flash';
+  if(!modelId.startsWith('models/')) modelId = 'models/' + modelId;
+  const url = `https://generativelanguage.googleapis.com/v1/${modelId}:generateContent?key=${CFG.ak}`;
+  const prompt = `이력서 분석 후 다음 JSON 형식으로만 답하세요: {"이름":"","연락처":"","지원직무":"","경력요약":""}`;
+  
+  const resp = await fetch(url, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      contents: [{ parts: [{ inline_data: { mime_type: mime, data: b64 } }, { text: prompt }] }],
+      generationConfig: { response_mime_type: "application/json" }
+    })
   });
+  const data = await resp.json();
+  if(data.error) throw new Error(data.error.message);
+  return data.candidates[0].content.parts[0].text;
 }
 
-// 기본 텍스트 파싱 (API 없을 때)
-function parseTextBasic(text, fname){
-  const low=(text+fname).toLowerCase();
-  const src=low.includes('saramin')||low.includes('사람인')?'사람인':low.includes('jobkorea')||low.includes('잡코리아')?'잡코리아':fname.endsWith('.pdf')?'PDF이력서':'직접입력';
-  return {
-    name: (text.match(/(?:이름|성명)\s*[:：]?\s*([가-힣]{2,5})/)||[])[1]||'',
-    phone:(text.match(/0\d{1,2}[-.\s]?\d{3,4}[-.\s]?\d{4}/)||[])[0]||'',
-    email:(text.match(/[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}/)||[])[0]||'',
-    source:src, job:'',
-  };
-}
-
-// 텍스트에서 정보 추출 (JSON 파싱 실패 시)
-function extractFromText(text){
-  const get=(labels)=>{
-    for(const l of labels){
-      const m=text.match(new RegExp(l+'[\\s:：]+([^\\n]+)'));
-      if(m) return m[1].trim();
-    }
-    return '';
-  };
-  return {
-    이름: get(['이름','성명','name']),
-    연락처: (text.match(/0\d{1,2}[-.\s]?\d{3,4}[-.\s]?\d{4}/)||[])[0]||'',
-    이메일: (text.match(/[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}/)||[])[0]||'',
-    지원직무: get(['지원직무','지원분야','지원 직무']),
-  };
+function showParsedResult(d){
+  document.getElementById('pgrd').innerHTML = `<div><small>이름</small><div>${d.name}</div></div><div><small>직무</small><div>${d.job}</div></div>`;
+  document.getElementById('upres').style.display = 'block';
 }
 
 function saveFromUpload(){
-  if(!upData) return;
-  DB.push({
-    id:uid(), ts:Date.now(),
-    name:upData.name||'이름 미상',
-    phone:upData.phone||'', email:upData.email||'',
-    source:upData.source||'PDF이력서', stage:'서류검토',
-    job:upData.job||'',
-    career:upData.career||upData.aiSummary||'',
-    memo:'',
-    history:[{date:todayS(),msg:`이력서 업로드 등록 (${upData.source||'PDF이력서'})`}],
-  });
-  save(); resetUpload(); renderDash();
-  toast('지원자로 저장되었습니다!','ok');
-  goPage('applicants');
+  DB.push({...upData, id: uid(), ts: Date.now(), stage: '서류검토', memo: '', email: ''});
+  save(); resetUpload(); goPage('applicants');
 }
 
 function resetUpload(){
-  upData=null;
-  document.getElementById('upres').style.display='none';
-  document.getElementById('ai-progress').style.display='none';
-  fi.value='';
+  document.getElementById('upres').style.display = 'none';
+  document.getElementById('ai-progress').style.display = 'none';
 }
 
-/* ═══ SETTINGS ═══ */
-document.getElementById('cak').value=CFG.ak||'';
-document.getElementById('cmod').value=CFG.m||'gemini-1.5-flash';
-function saveCfg(){
-  CFG.ak=document.getElementById('cak').value.trim();
-  CFG.m=document.getElementById('cmod').value;
-  localStorage.setItem('rma4c',JSON.stringify(CFG));
-  toast('설정 저장 완료!','ok');
-}
-
-function exportJSON(){
-  const blob=new Blob([JSON.stringify({v:4,applicants:DB},null,2)],{type:'application/json'});
-  const a=document.createElement('a'); a.href=URL.createObjectURL(blob);
-  a.download='recruit_'+new Date().toISOString().slice(0,10)+'.json'; a.click();
-}
-function importJSON(e){
-  const file=e.target.files[0]; if(!file) return;
-  const r=new FileReader();
-  r.onload=ev=>{
-    try{
-      const d=JSON.parse(ev.target.result);
-      if(d.applicants){ DB=d.applicants; save(); renderDash(); toast('가져오기 완료!','ok'); }
-      else toast('올바른 백업 파일이 아닙니다','err');
-    } catch{ toast('파일 파싱 오류','err'); }
-  };
-  r.readAsText(file);
-}
-function clearAll(){
-  if(!confirm('모든 데이터를 삭제합니까? 되돌릴 수 없습니다.')) return;
-  DB=[]; save(); renderDash(); toast('초기화 완료','ok');
-}
-
-/* ═══ MODAL ═══ */
-function openModal(id){ document.getElementById(id).classList.add('open'); }
-function closeModal(id){ document.getElementById(id).classList.remove('open'); }
-document.querySelectorAll('.overlay').forEach(el=>{
-  el.addEventListener('click',e=>{ if(e.target===el) el.classList.remove('open'); });
-});
-
-/* ═══ TOAST ═══ */
-function toast(msg,type){
-  const el=document.getElementById('toast');
-  el.textContent=msg; el.className='toast show'+(type?' '+type:'');
-  clearTimeout(el._t); el._t=setTimeout(()=>{ el.className='toast'; },2800);
-}
+/* ═══ UTILS ═══ */
+function setStep(n,s){ const d=document.getElementById('step'+n+'-dot'); d.className='step-dot '+s; d.textContent=s==='done'?'✓':n; }
+function fileToBase64(f){ return new Promise((res,rej)=>{ const r=new FileReader(); r.onload=e=>res(e.target.result.split(',')[1]); r.readAsDataURL(f); }); }
+function saveCfg(){ CFG.ak=document.getElementById('cak').value; CFG.m=document.getElementById('cmod').value; localStorage.setItem('rma4c', JSON.stringify(CFG)); toast('설정 저장','ok'); }
+function toast(m,t){ const e=document.getElementById('toast'); e.textContent=m; e.className='show '+t; setTimeout(()=>e.className='',2000); }
 
 /* ═══ INIT ═══ */
 renderDash();
-document.getElementById('nc').textContent=DB.length;
+document.getElementById('nc').textContent = DB.length;
+document.getElementById('cak').value = CFG.ak;
+document.getElementById('cmod').value = CFG.m;
 </script>
 </body>
 </html>
