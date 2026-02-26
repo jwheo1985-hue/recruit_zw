@@ -748,27 +748,18 @@ async function handleFile(file){
 }
 
 async function callGeminiVision(b64, mime){
-  const prompt = `이 이력서 문서를 분석하고 다음 정보를 JSON 형식으로만 답해주세요. 다른 텍스트 없이 JSON만 반환하세요.
+  // 모델 명칭을 v1 버전에 맞게 수정 (앞에 models/ 를 명시적으로 붙여줍니다)
+  const modelId = CFG.m || 'gemini-1.5-flash';
+  const fullModelName = modelId.startsWith('models/') ? modelId : `models/${modelId}`;
 
-{
-  "이름": "실제 이름",
-  "연락처": "전화번호",
-  "이메일": "이메일주소",
-  "생년월일": "생년월일",
-  "주소": "주소",
-  "지원직무": "지원하는 직무/부문",
-  "학력": "최종학력 요약",
-  "경력요약": "주요 경력 전체 요약 (회사명, 기간, 직위, 담당업무 포함)",
-  "핵심기술": "보유 기술, 자격증, 외국어 능력",
-  "강점": "이 지원자의 강점 3가지",
-  "특이사항": "비자, 특이사항, 면접일지 등",
-  "AI요약": "전체 요약 및 서류 통과 추천 여부"
-}`;
+  const prompt = `이 이력서 문서를 분석하고 다음 정보를 JSON 형식으로만 답해주세요... (중략)`;
 
+  // v1beta 대신 v1 엔드포인트를 사용하세요
   const resp = await fetch(
-    `https://generativelanguage.googleapis.com/v1beta/models/${CFG.m}:generateContent?key=${CFG.ak}`,
+    `https://generativelanguage.googleapis.com/v1/${fullModelName}:generateContent?key=${CFG.ak}`,
     {
-      method:'POST', headers:{'Content-Type':'application/json'},
+      method:'POST', 
+      headers:{'Content-Type':'application/json'},
       body: JSON.stringify({
         contents:[{
           parts:[
@@ -779,11 +770,6 @@ async function callGeminiVision(b64, mime){
       })
     }
   );
-  const data=await resp.json();
-  if(data.error) throw new Error(data.error.message);
-  return data?.candidates?.[0]?.content?.parts?.[0]?.text || '';
-}
-
 function showParsedResult(d){
   document.getElementById('pgrd').innerHTML=`
     <div><div class="pf-l">이름</div><div class="pf-v" style="color:var(--blue)">${d.name||'미감지'}</div></div>
